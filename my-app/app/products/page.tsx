@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProducts, getCategories, type Product } from "../../lib/api";
+import { getProducts, getCategories, type Product } from "../lib/api";
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
