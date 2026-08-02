@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -13,9 +14,9 @@ export default function Footer() {
               Defining modern streetwear. Exclusive drops, global community, uncompromising aesthetic.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-background/50 transition-colors">INSTAGRAM</a>
-              <a href="#" className="hover:text-background/50 transition-colors">TIKTOK</a>
-              <a href="#" className="hover:text-background/50 transition-colors">FACEBOOK</a>
+              <a href="#" className="hover:text-background/50 transition-colors"><FaInstagram /></a>
+              <a href="#" className="hover:text-background/50 transition-colors"><FaTiktok /></a>
+              <a href="#" className="hover:text-background/50 transition-colors"><FaFacebook /></a>
             </div>
           </div>
 
