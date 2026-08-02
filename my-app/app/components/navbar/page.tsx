@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Search, ShoppingBag, ChevronDown, Menu, X, Sun, Moon, User } from "lucide-react";
 
-export default function Navbar({ setPage }: { setPage?: (page: string) => void }) {
+export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,58 +16,61 @@ export default function Navbar({ setPage }: { setPage?: (page: string) => void }
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/90 dark:bg-black/90 backdrop-blur-md border-b border-gray-100 dark:border-white/10 transition-colors duration-300">
-      <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-xl border-b border-border transition-colors duration-300">
+      <div className="container mx-auto px-6 h-24 flex items-center justify-between max-w-7xl">
 
         <div className="flex-1 flex md:hidden justify-start">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300"
+            className="text-foreground hover:text-foreground/50 transition-colors duration-300"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" strokeWidth={1.5} /> : <Menu className="w-6 h-6" strokeWidth={1.5} />}
+            {isMobileMenuOpen ? <X className="w-6 h-6" strokeWidth={1} /> : <Menu className="w-6 h-6" strokeWidth={1} />}
           </button>
         </div>
 
         <div className="flex-1 flex justify-center md:justify-start">
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              setPage && setPage("home");
-            }}
-            className="text-2xl font-bold tracking-tighter text-black dark:text-white uppercase transition-colors duration-300"
+          <Link
+            href="/"
+            className="text-3xl font-light tracking-[0.2em] text-foreground uppercase transition-colors duration-300"
           >
-            Streetwear<span className="text-gray-400 dark:text-gray-500">.</span>
-          </a>
+            OSW<span className="text-foreground/30">.</span>
+          </Link>
         </div>
 
-        <div className="hidden md:flex flex-1 justify-center items-center space-x-10 text-xs font-semibold tracking-widest text-black dark:text-white uppercase transition-colors duration-300">
-          <a href="#" className="hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300">New Arrivals</a>
+        <div className="hidden md:flex flex-1 justify-center items-center space-x-12 text-[10px] font-medium tracking-[0.2em] text-foreground uppercase transition-colors duration-300">
+          <Link href="/products" className="relative group">
+            <span className="hover:text-foreground/60 transition-colors">New Arrivals</span>
+            <span className="absolute -bottom-2 left-0 w-full h-[1px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+          </Link>
 
           <div className="group relative">
-            <button className="flex items-center gap-1 hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300 uppercase cursor-pointer">
+            <button className="flex items-center gap-2 hover:text-foreground/60 transition-colors duration-300 uppercase cursor-pointer">
               Collections
-              <ChevronDown className="w-3 h-3" strokeWidth={3} />
+              <ChevronDown className="w-3 h-3 transition-transform duration-300 group-hover:rotate-180" strokeWidth={1.5} />
             </button>
-            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-              <div className="w-48 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-xl flex flex-col py-2 transition-colors duration-300">
-                <a href="#" className="px-6 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800 text-black dark:text-white transition-colors duration-200">Menswear</a>
-                <a href="#" className="px-6 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800 text-black dark:text-white transition-colors duration-200">Womenswear</a>
-                <a href="#" className="px-6 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800 text-black dark:text-white transition-colors duration-200">Accessories</a>
-                <a href="#" className="px-6 py-3 hover:bg-gray-50 dark:hover:bg-zinc-800 text-black dark:text-white transition-colors duration-200">Footwear</a>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+              <div className="w-56 bg-background border border-border shadow-2xl flex flex-col py-4">
+                {["Menswear", "Womenswear", "Accessories", "Footwear"].map((item) => (
+                  <Link key={item} href="/products" className="px-8 py-3 text-[10px] tracking-[0.2em] uppercase hover:bg-muted text-foreground transition-colors">
+                    {item}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
 
-          <a href="#" className="hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300">About</a>
+          <Link href="/about" className="relative group">
+            <span className="hover:text-foreground/60 transition-colors">About</span>
+            <span className="absolute -bottom-2 left-0 w-full h-[1px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+          </Link>
         </div>
 
-        <div className="flex-1 flex justify-end items-center space-x-4 md:space-x-6">
+        <div className="flex-1 flex justify-end items-center space-x-6">
           <button
             onClick={toggleTheme}
-            className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300"
+            className="text-foreground hover:text-foreground/50 transition-colors duration-300"
           >
-            {isDark ? <Sun className="w-5 h-5" strokeWidth={1.5} /> : <Moon className="w-5 h-5" strokeWidth={1.5} />}
+            {isDark ? <Sun className="w-5 h-5" strokeWidth={1} /> : <Moon className="w-5 h-5" strokeWidth={1} />}
           </button>
 
           <div className="flex items-center">
@@ -76,46 +79,53 @@ export default function Navbar({ setPage }: { setPage?: (page: string) => void }
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search..."
-                className="w-24 md:w-40 mr-2 bg-transparent text-xs text-black dark:text-white border-b border-gray-200 dark:border-zinc-700 focus:outline-none focus:border-black dark:focus:border-white transition-all duration-300"
+                placeholder="SEARCH..."
+                className="w-32 md:w-48 mr-4 bg-transparent text-[10px] tracking-[0.2em] font-medium uppercase text-foreground border-b border-border focus:outline-none focus:border-foreground transition-all duration-300"
                 autoFocus
               />
             )}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300"
+              className="text-foreground hover:text-foreground/50 transition-colors duration-300"
             >
-              <Search className="w-5 h-5" strokeWidth={1.5} />
+              <Search className="w-5 h-5" strokeWidth={1} />
             </button>
           </div>
 
-          <button className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300 relative">
-            <ShoppingBag className="w-5 h-5" strokeWidth={1.5} />
-            <span className="absolute -top-1 -right-1.5 bg-black dark:bg-white text-white dark:text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center transition-colors duration-300">
+          <Link href="/login" className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:block">
+            <User className="w-5 h-5" strokeWidth={1} />
+          </Link>
+
+          <button className="text-foreground hover:text-foreground/50 transition-colors duration-300 relative flex items-center gap-2 group">
+            <ShoppingBag className="w-5 h-5" strokeWidth={1} />
+            <span className="bg-foreground text-background text-[10px] font-bold w-5 h-5 flex items-center justify-center transition-colors group-hover:bg-foreground/80">
               0
             </span>
           </button>
-
-          <Link href="/login">
-            <button className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300">
-              <User className="w-5 h-5" strokeWidth={1.5} />
-            </button>
-          </Link>
         </div>
       </div>
+
+
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-zinc-900 border-b border-gray-100 dark:border-white/10 shadow-lg px-6 py-4 flex flex-col space-y-4 transition-colors duration-300">
-          <a href="#" className="text-sm font-semibold tracking-widest text-black dark:text-white uppercase hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300">New Arrivals</a>
-          <div className="flex flex-col space-y-2">
-            <span className="text-sm font-semibold tracking-widest text-black dark:text-white uppercase">Collections</span>
-            <div className="pl-4 flex flex-col space-y-2">
-              <a href="#" className="text-xs font-semibold tracking-widest text-gray-500 dark:text-gray-400 uppercase hover:text-black dark:hover:text-white transition-colors duration-300">Menswear</a>
-              <a href="#" className="text-xs font-semibold tracking-widest text-gray-500 dark:text-gray-400 uppercase hover:text-black dark:hover:text-white transition-colors duration-300">Womenswear</a>
-              <a href="#" className="text-xs font-semibold tracking-widest text-gray-500 dark:text-gray-400 uppercase hover:text-black dark:hover:text-white transition-colors duration-300">Accessories</a>
-              <a href="#" className="text-xs font-semibold tracking-widest text-gray-500 dark:text-gray-400 uppercase hover:text-black dark:hover:text-white transition-colors duration-300">Footwear</a>
+        <div className="md:hidden absolute top-full left-0 w-full h-[calc(100vh-6rem)] bg-background border-t border-border px-6 py-10 flex flex-col space-y-10 transition-colors duration-300">
+          <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-light tracking-widest text-foreground uppercase hover:text-foreground/50 transition-colors">New Arrivals</Link>
+          <div className="flex flex-col space-y-6">
+            <span className="text-xs font-medium tracking-[0.3em] text-foreground/40 uppercase">Collections</span>
+            <div className="flex flex-col space-y-6 pl-6 border-l border-border">
+              {["Menswear", "Womenswear", "Accessories", "Footwear"].map((item) => (
+                <Link key={item} href="/products" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-light tracking-widest text-foreground uppercase hover:text-foreground/50 transition-colors">
+                  {item}
+                </Link>
+              ))}
             </div>
           </div>
-          <a href="#" className="text-sm font-semibold tracking-widest text-black dark:text-white uppercase hover:text-gray-500 dark:hover:text-gray-400 transition-colors duration-300">About</a>
+          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-light tracking-widest text-foreground uppercase hover:text-foreground/50 transition-colors">About</Link>
+          
+          <div className="mt-auto pt-8 border-t border-border flex items-center justify-between">
+            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
+              <User className="w-4 h-4" strokeWidth={1} /> Account
+            </Link>
+          </div>
         </div>
       )}
     </nav>
