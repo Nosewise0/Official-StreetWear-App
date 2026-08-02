@@ -39,12 +39,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex flex-2 justify-center items-center space-x-12 text-[11px] font-medium tracking-[0.2em] text-foreground uppercase transition-colors duration-300 h-full">
-            <Link href="/products" className="h-full flex items-center group relative">
-              <span className="relative">
-                New Arrivals
-                <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
-              </span>
-            </Link>
+
 
             <div className="h-full flex items-center group">
               <button className="flex items-center gap-2 hover:text-foreground/60 transition-colors duration-300 uppercase cursor-pointer relative h-full">
@@ -98,6 +93,13 @@ export default function Navbar() {
                 <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
               </span>
             </Link>
+
+            <Link href="/contact" className="h-full flex items-center group">
+              <span className="relative hover:text-foreground/60 transition-colors">
+                Contact
+                <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+              </span>
+            </Link>
           </div>
 
           <div className="flex-1 flex justify-end items-center space-x-6">
@@ -107,7 +109,9 @@ export default function Navbar() {
             >
               {isSearchOpen ? <X className="w-5 h-5" strokeWidth={1} /> : <Search className="w-5 h-5" strokeWidth={1} />}
             </button>
-
+            <button onClick={toggleTheme} className="flex items-center gap-3 text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
+              {isDark ? <Sun className="w-4 h-4" strokeWidth={1} /> : <Moon className="w-4 h-4" strokeWidth={1} />}
+            </button>
             <Link href="/login" className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:block">
               <User className="w-5 h-5" strokeWidth={1} />
             </Link>
@@ -122,6 +126,7 @@ export default function Navbar() {
                 0
               </span>
             </button>
+
           </div>
         </div>
 
@@ -157,6 +162,7 @@ export default function Navbar() {
 
           <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-light tracking-widest text-foreground uppercase hover:text-foreground/50 transition-colors italic">Archive / Sale</Link>
           <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-light tracking-widest text-foreground uppercase hover:text-foreground/50 transition-colors">About</Link>
+          <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-light tracking-widest text-foreground uppercase hover:text-foreground/50 transition-colors">Contact</Link>
 
           <div className="mt-auto pt-8 border-t border-border grid grid-cols-2 gap-6">
             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
