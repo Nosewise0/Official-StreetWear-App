@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Search, ShoppingBag, ChevronDown, Menu, X, Sun, Moon, User, Heart, Globe, HelpCircle } from "lucide-react";
+import { useCart } from "../../context/CartContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDark, setIsDark] = useState(false);
+  const { totalItems } = useCart();
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
@@ -123,7 +125,7 @@ export default function Navbar() {
             <button className="text-foreground hover:text-foreground/50 transition-colors duration-300 flex items-center gap-2 group">
               <ShoppingBag className="w-5 h-5" strokeWidth={1} />
               <span className="bg-foreground text-background text-[10px] font-bold w-5 h-5 flex items-center justify-center transition-colors group-hover:bg-foreground/80">
-                0
+                {totalItems}
               </span>
             </button>
 

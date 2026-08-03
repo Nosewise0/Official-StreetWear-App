@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getProducts, getCategories, type Product } from "../lib/api";
 import { ShoppingBag } from "lucide-react";
 
 export default function Products() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [activeCategory, setActiveCategory] = useState("All");
@@ -73,7 +76,7 @@ export default function Products() {
         {!loading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
             {products.map((product, idx) => (
-              <div key={product.id} className="group flex flex-col relative">
+              <Link key={product.id} href={`/products/${product.id}`} className="group flex flex-col relative">
 
                 <div className="aspect-[3/4] bg-muted relative overflow-hidden mb-4 cursor-pointer">
 
@@ -96,7 +99,10 @@ export default function Products() {
 
 
                   <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out flex gap-2">
-                    <button className="flex-1 bg-background text-foreground font-medium text-xs tracking-widest uppercase py-3 border border-border hover:bg-foreground hover:text-background transition-colors flex items-center justify-center gap-2">
+                    <button
+                      onClick={(e) => { e.preventDefault(); router.push(`/products/${product.id}`); }}
+                      className="flex-1 bg-background text-foreground font-medium text-xs tracking-widest uppercase py-3 border border-border hover:bg-foreground hover:text-background transition-colors flex items-center justify-center gap-2"
+                    >
                       <ShoppingBag className="w-4 h-4" /> Quick Add
                     </button>
                   </div>
@@ -116,7 +122,7 @@ export default function Products() {
                     {product.category}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
