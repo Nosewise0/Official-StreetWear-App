@@ -34,8 +34,9 @@ export default function Footer() {
             <h4 className="text-xs font-bold tracking-[0.2em] uppercase">Support</h4>
             <div className="flex flex-col space-y-4 text-sm font-light text-background/70">
               <Link href="/contact" className="hover:text-background transition-colors">Contact Us</Link>
+              <Link href="/help" className="hover:text-background transition-colors">Help Center</Link>
               <Link href="#" className="hover:text-background transition-colors">Shipping & Returns</Link>
-              <Link href="#" className="hover:text-background transition-colors">FAQ</Link>
+              <Link href="/help" className="hover:text-background transition-colors">FAQ</Link>
               <Link href="#" className="hover:text-background transition-colors">Track Order</Link>
             </div>
           </div>
