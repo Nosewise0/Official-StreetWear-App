@@ -146,16 +146,14 @@ function AccordionItem({ q, a, index }: { q: string; a: string; index: number })
           {q}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-foreground/40 mt-0.5 shrink-0 transition-transform duration-300 ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`w-4 h-4 text-foreground/40 mt-0.5 shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""
+            }`}
           strokeWidth={1.5}
         />
       </button>
       <div
-        className={`overflow-hidden transition-all duration-300 ease-out ${
-          open ? "max-h-96 opacity-100 pb-6" : "max-h-0 opacity-0 pb-0"
-        }`}
+        className={`overflow-hidden transition-all duration-300 ease-out ${open ? "max-h-96 opacity-100 pb-6" : "max-h-0 opacity-0 pb-0"
+          }`}
       >
         <p className="text-sm font-light text-foreground/70 leading-relaxed">
           {a}
@@ -211,11 +209,10 @@ export default function Help() {
                   key={id}
                   id={`help-category-${id}`}
                   onClick={() => setActiveCategory(id)}
-                  className={`flex items-center gap-3 px-4 py-3 text-left text-xs font-medium tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-200 border ${
-                    activeCategory === id
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-transparent text-foreground/60 border-transparent hover:border-border hover:text-foreground"
-                  }`}
+                  className={`flex items-center gap-3 px-4 py-3 text-left text-xs font-medium tracking-[0.15em] uppercase whitespace-nowrap transition-all duration-200 border ${activeCategory === id
+                    ? "bg-foreground text-background border-foreground"
+                    : "bg-transparent text-foreground/60 border-transparent hover:border-border hover:text-foreground"
+                    }`}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
                   {label}
