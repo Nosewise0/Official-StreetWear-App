@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Search, ShoppingBag, ChevronDown, Menu, X, Sun, Moon, User, Heart, Globe, HelpCircle } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDark, setIsDark] = useState(false);
   const { totalItems } = useCart();
+  const { totalItems: wishlistItems } = useWishlist();
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
@@ -118,8 +120,13 @@ export default function Navbar() {
               <User className="w-5 h-5" strokeWidth={1} />
             </Link>
 
-            <Link href="/wishlist" className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:block">
+            <Link href="/wishlist" className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:flex items-center gap-1.5 group">
               <Heart className="w-5 h-5" strokeWidth={1} />
+              {wishlistItems > 0 && (
+                <span className="bg-foreground text-background text-[10px] font-bold w-5 h-5 flex items-center justify-center transition-colors group-hover:bg-foreground/80">
+                  {wishlistItems}
+                </span>
+              )}
             </Link>
 
             <Link href="/cart" className="text-foreground hover:text-foreground/50 transition-colors duration-300 flex items-center gap-2 group">

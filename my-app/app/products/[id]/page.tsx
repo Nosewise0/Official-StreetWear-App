@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { getProductById, getProducts, type Product } from "../../lib/api";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 
 const COLOR_CSS: Record<string, string> = {
   black: "#1a1a1a",
@@ -107,6 +108,7 @@ export default function ProductDetail() {
   const router = useRouter();
   const id = Number(params.id);
   const { addItem } = useCart();
+  const { toggleItem, isWishlisted } = useWishlist();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [related, setRelated] = useState<Product[]>([]);
@@ -383,10 +385,20 @@ export default function ProductDetail() {
 
               <button
                 id={`add-to-wishlist-${product.id}`}
-                className="group w-full inline-flex items-center justify-between px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase border border-border hover:border-foreground transition-colors"
+                onClick={() => toggleItem({ id: product.id, name: product.name, price: product.price, category: product.category, image: product.image })}
+                className={`group w-full inline-flex items-center justify-between px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase border transition-colors ${
+                  isWishlisted(product.id)
+                    ? "border-foreground bg-muted"
+                    : "border-border hover:border-foreground"
+                }`}
               >
-                <span>Add to Wishlist</span>
-                <Heart className="w-4 h-4 group-hover:fill-foreground transition-all duration-200" strokeWidth={1} />
+                <span>{isWishlisted(product.id) ? "Wishlisted" : "Add to Wishlist"}</span>
+                <Heart
+                  className={`w-4 h-4 transition-all duration-200 ${
+                    isWishlisted(product.id) ? "fill-foreground" : "group-hover:fill-foreground"
+                  }`}
+                  strokeWidth={1}
+                />
               </button>
             </div>
 
