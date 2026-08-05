@@ -61,8 +61,8 @@ export default function Footer() {
         <div className="pt-8 border-t border-background/20 flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] font-medium tracking-[0.2em] uppercase text-background/50">
           <p>&copy; {new Date().getFullYear()} Official StreetWear. All Rights Reserved.</p>
           <div className="flex gap-6">
-            <Link href="#" className="hover:text-background transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-background transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-background transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-background transition-colors">Terms</Link>
           </div>
         </div>
       </div>
