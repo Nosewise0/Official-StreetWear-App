@@ -91,9 +91,8 @@ function DetailAccordion({ title, children }: { title: string; children: React.R
         />
       </button>
       <div
-        className={`overflow-hidden transition-all duration-300 ease-out ${
-          open ? "max-h-72 opacity-100 pb-6" : "max-h-0 opacity-0"
-        }`}
+        className={`overflow-hidden transition-all duration-300 ease-out ${open ? "max-h-72 opacity-100 pb-6" : "max-h-0 opacity-0"
+          }`}
       >
         <div className="text-sm font-light text-foreground/70 leading-relaxed space-y-2">
           {children}
@@ -241,9 +240,8 @@ export default function ProductDetail() {
                 <button
                   key={i}
                   onClick={() => setActiveThumb(i)}
-                  className={`aspect-square relative overflow-hidden border-2 transition-colors ${
-                    activeThumb === i ? "border-foreground" : "border-transparent hover:border-border"
-                  }`}
+                  className={`aspect-square relative overflow-hidden border-2 transition-colors ${activeThumb === i ? "border-foreground" : "border-transparent hover:border-border"
+                    }`}
                 >
                   <Placeholder seed={id + i} />
                 </button>
@@ -286,11 +284,10 @@ export default function ProductDetail() {
                       onClick={() => setSelectedColor(color)}
                       title={color}
                       style={{ backgroundColor: getColorCss(color) }}
-                      className={`w-8 h-8 border-2 transition-all duration-150 ${
-                        selectedColor === color
+                      className={`w-8 h-8 border-2 transition-all duration-150 ${selectedColor === color
                           ? "border-foreground ring-2 ring-offset-2 ring-foreground/30"
                           : "border-transparent hover:border-border"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -314,11 +311,10 @@ export default function ProductDetail() {
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2.5 text-xs font-medium tracking-[0.15em] uppercase border transition-all duration-150 ${
-                        selectedSize === size
+                      className={`px-4 py-2.5 text-xs font-medium tracking-[0.15em] uppercase border transition-all duration-150 ${selectedSize === size
                           ? "bg-foreground text-background border-foreground"
                           : "bg-transparent text-foreground/70 border-border hover:border-foreground hover:text-foreground"
-                      }`}
+                        }`}
                     >
                       {size}
                     </button>
@@ -357,24 +353,23 @@ export default function ProductDetail() {
                 id={`add-to-cart-${product.id}`}
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
-                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all duration-200 ${
-                  addedState === "added"
+                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all duration-200 ${addedState === "added"
                     ? "bg-foreground text-background"
                     : addedState === "needsSize"
-                    ? "bg-foreground/80 text-background"
-                    : product.stock === 0
-                    ? "bg-muted text-foreground/30 cursor-not-allowed"
-                    : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
-                }`}
+                      ? "bg-foreground/80 text-background"
+                      : product.stock === 0
+                        ? "bg-muted text-foreground/30 cursor-not-allowed"
+                        : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
+                  }`}
               >
                 <span>
                   {addedState === "added"
                     ? "Added to Cart!"
                     : addedState === "needsSize"
-                    ? "Select a Size First"
-                    : product.stock === 0
-                    ? "Out of Stock"
-                    : "Add to Cart"}
+                      ? "Select a Size First"
+                      : product.stock === 0
+                        ? "Out of Stock"
+                        : "Add to Cart"}
                 </span>
                 {addedState === "added" ? (
                   <Check className="w-4 h-4" strokeWidth={2} />
@@ -386,17 +381,15 @@ export default function ProductDetail() {
               <button
                 id={`add-to-wishlist-${product.id}`}
                 onClick={() => toggleItem({ id: product.id, name: product.name, price: product.price, category: product.category, image: product.image })}
-                className={`group w-full inline-flex items-center justify-between px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase border transition-colors ${
-                  isWishlisted(product.id)
+                className={`group w-full inline-flex items-center justify-between px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase border transition-colors ${isWishlisted(product.id)
                     ? "border-foreground bg-muted"
                     : "border-border hover:border-foreground"
-                }`}
+                  }`}
               >
                 <span>{isWishlisted(product.id) ? "Wishlisted" : "Add to Wishlist"}</span>
                 <Heart
-                  className={`w-4 h-4 transition-all duration-200 ${
-                    isWishlisted(product.id) ? "fill-foreground" : "group-hover:fill-foreground"
-                  }`}
+                  className={`w-4 h-4 transition-all duration-200 ${isWishlisted(product.id) ? "fill-foreground" : "group-hover:fill-foreground"
+                    }`}
                   strokeWidth={1}
                 />
               </button>

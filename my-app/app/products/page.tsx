@@ -17,7 +17,7 @@ export default function Products() {
   useEffect(() => {
     getCategories()
       .then(setCategories)
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -41,11 +41,10 @@ export default function Products() {
               <button
                 key={i}
                 onClick={() => setActiveCategory(cat)}
-                className={`text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase px-4 py-2 border transition-colors duration-300 whitespace-nowrap ${
-                  activeCategory === cat
+                className={`text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase px-4 py-2 border transition-colors duration-300 whitespace-nowrap ${activeCategory === cat
                     ? "bg-foreground text-background border-foreground"
                     : "bg-transparent text-foreground/60 border-transparent hover:border-foreground/20 hover:text-foreground"
-                }`}
+                  }`}
               >
                 {cat}
               </button>
@@ -84,17 +83,17 @@ export default function Products() {
                     <span className="z-10 bg-background/50 backdrop-blur-sm px-3 py-1 text-sm border border-foreground/10">{product.name.split(' ')[0]}</span>
                     <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
                   </div>
-                  
+
 
                   {idx === 0 && (
-                     <div className="absolute top-4 left-4 bg-foreground text-background text-[10px] font-bold tracking-widest uppercase px-3 py-1">
-                       New Arrival
-                     </div>
+                    <div className="absolute top-4 left-4 bg-foreground text-background text-[10px] font-bold tracking-widest uppercase px-3 py-1">
+                      New Arrival
+                    </div>
                   )}
                   {idx === 1 && (
-                     <div className="absolute top-4 left-4 bg-background text-foreground border border-border text-[10px] font-bold tracking-widest uppercase px-3 py-1">
-                       Best Seller
-                     </div>
+                    <div className="absolute top-4 left-4 bg-background text-foreground border border-border text-[10px] font-bold tracking-widest uppercase px-3 py-1">
+                      Best Seller
+                    </div>
                   )}
 
 

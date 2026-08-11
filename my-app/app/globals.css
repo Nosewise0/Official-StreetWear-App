@@ -10,8 +10,7 @@ body {
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-}
+@theme {}
 
 @theme inline {
   --font-heading: var(--font-sans);
@@ -129,9 +128,11 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
