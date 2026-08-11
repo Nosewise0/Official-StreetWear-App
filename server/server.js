@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
+const supabase = require("./supabaseClient");
 const productRoutes = require("./routes/products");
 const categoryRoutes = require("./routes/categories");
 
@@ -51,3 +51,9 @@ app.listen(PORT, () => {
   console.log(`   Environment : ${process.env.NODE_ENV || "development"}`);
   console.log(`   Client URL  : ${process.env.CLIENT_URL || "http://localhost:3000"}\n`);
 });
+
+app.get("/api/test", async (req, res) => {
+   const { data, error } = await supabase.from('test').select('*');
+  if (error) return res.status(500).json({ error: error.message });
+  res.json({ data });
+})

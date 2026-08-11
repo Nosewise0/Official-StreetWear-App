@@ -12,6 +12,12 @@ export interface Product {
   image: string | null;
 }
 
+export interface User {
+  id: number;
+  user: string;
+  email: string;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   count?: number;
