@@ -82,10 +82,10 @@ export default function Login() {
             </p>
           </div>
 
-          {/* ── Password Reset Success ── */}
+
           {resetSent ? (
             <div className="space-y-4 border border-foreground/20 p-8">
-              <p className="text-sm font-medium tracking-[0.1em] uppercase">✅ Reset link sent</p>
+              <p className="text-sm font-medium tracking-[0.1em] uppercase">Reset link sent</p>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">
                 Check your inbox for a password reset link.
               </p>
@@ -97,7 +97,7 @@ export default function Login() {
               </button>
             </div>
           ) : mode === "login" ? (
-            /* ── Login Form ── */
+
             <form onSubmit={handleLogin} className="space-y-10">
               <div className="space-y-8">
                 <div className="space-y-3">
@@ -147,7 +147,7 @@ export default function Login() {
               </button>
             </form>
           ) : (
-            /* ── Reset Password Form ── */
+
             <form onSubmit={handleReset} className="space-y-10">
               <div className="space-y-3">
                 <label className="text-xs font-bold tracking-[0.2em] uppercase text-foreground">Email</label>

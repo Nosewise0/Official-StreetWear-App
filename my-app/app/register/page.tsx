@@ -81,7 +81,7 @@ export default function Register() {
           {success ? (
             <div className="space-y-4 border border-foreground/20 p-8">
               <p className="text-sm font-medium tracking-[0.1em] uppercase text-foreground">
-                ✅ Account created!
+                Account created!
               </p>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">
                 Check your email to confirm your account. Redirecting you shortly…

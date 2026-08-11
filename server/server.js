@@ -33,6 +33,18 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 
+app.get("/api/test", async (req, res) => {
+  try {
+    const { error } = await supabase.rpc("version");
+    if (error && error.code !== "PGRST202") {
+      return res.status(500).json({ connected: false, error: error.message });
+    }
+    res.json({ connected: true, message: "Supabase connection OK" });
+  } catch (err) {
+    res.status(503).json({ connected: false, error: String(err) });
+  }
+});
+
 app.use((req, res) => {
   res.status(404).json({ success: false, message: `Route ${req.originalUrl} not found` });
 });
@@ -47,14 +59,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`\n🚀 StreetWear API running on http://localhost:${PORT}`);
-  console.log(`   Environment : ${process.env.NODE_ENV || "development"}`);
-  console.log(`   Client URL  : ${process.env.CLIENT_URL || "http://localhost:3000"}\n`);
+  console.log(`StreetWear API running on http://localhost:${PORT}`);
+  console.log(`Environment : ${process.env.NODE_ENV || "development"}`);
+  console.log(`Client URL  : ${process.env.CLIENT_URL || "http://localhost:3000"}`);
 });
-
-app.get("/api/test", async (req, res) => {
-   const { data, error } = await supabase.from('test').select('*');
-  if (error) return res.status(500).json({ error: error.message });
-  res.json({ data });
-  console.log("Test data fetched from Supabase:");
-})
