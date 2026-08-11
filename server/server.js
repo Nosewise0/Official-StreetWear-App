@@ -4,6 +4,7 @@ const cors = require("cors");
 const supabase = require("./supabaseClient");
 const productRoutes = require("./routes/products");
 const categoryRoutes = require("./routes/categories");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/api/test", async (req, res) => {
   try {
