@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "./components/navbar/page";
 import Footer from "./components/footer/page";
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import "./globals.css";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <AuthProvider>
         <CartProvider>
           <WishlistProvider>
             <Navbar />
@@ -41,6 +43,7 @@ export default function RootLayout({
             <Footer />
           </WishlistProvider>
         </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
