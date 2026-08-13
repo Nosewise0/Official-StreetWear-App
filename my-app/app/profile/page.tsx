@@ -179,7 +179,6 @@ export default function ProfilePage() {
   return (
     <div className="min-h-[calc(100vh-5rem)] bg-background text-foreground">
 
-      {/* ── Breadcrumb ── */}
       <div className="border-b border-border">
         <div className="container mx-auto px-6 max-w-7xl py-4 flex items-center justify-between text-[10px] font-medium tracking-[0.2em] uppercase text-foreground/50">
           <div className="flex items-center gap-2">
@@ -196,7 +195,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* ── Member Header Hero ── */}
       <div className="w-full bg-foreground text-background py-16 md:py-20 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -246,11 +244,9 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* ── Main Dashboard Tabs ── */}
       <div className="container mx-auto px-6 max-w-7xl py-10 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 lg:gap-16 items-start">
 
-          {/* Navigation Sidebar */}
           <nav className="flex flex-row lg:flex-col border-b lg:border-b-0 lg:border-r border-border pb-4 lg:pb-0 lg:pr-8 gap-2 overflow-x-auto no-scrollbar">
             {[
               { id: "overview", label: "Overview", icon: UserIcon },
@@ -291,10 +287,8 @@ export default function ProfilePage() {
             </div>
           </nav>
 
-          {/* ── Content Area ── */}
           <div className="min-w-0">
 
-            {/* TAB 1: OVERVIEW */}
             {activeTab === "overview" && (
               <div className="space-y-12">
                 <div className="space-y-2">
@@ -304,7 +298,6 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                {/* Metric Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   <div className="p-6 border border-border bg-muted space-y-3">
                     <div className="flex items-center justify-between text-foreground/50">
@@ -340,7 +333,6 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Recent Order Preview */}
                 <div className="border border-border space-y-0">
                   <div className="p-6 border-b border-border flex items-center justify-between">
                     <div>
@@ -378,7 +370,6 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* TAB 2: ORDERS */}
             {activeTab === "orders" && (
               <div className="space-y-8">
                 <div className="space-y-2">
@@ -446,7 +437,6 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* TAB 3: ADDRESSES */}
             {activeTab === "addresses" && (
               <div className="space-y-8">
                 <div className="flex items-center justify-between">
@@ -487,7 +477,6 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* TAB 4: SETTINGS */}
             {activeTab === "settings" && (
               <div className="space-y-12">
                 <div className="space-y-2">
@@ -497,7 +486,6 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                {/* Profile Form */}
                 <form onSubmit={handleUpdateProfile} className="border border-border p-8 space-y-8">
                   <h3 className="text-xs font-bold tracking-[0.2em] uppercase border-b border-border pb-4">
                     Personal Information
@@ -555,7 +543,6 @@ export default function ProfilePage() {
                   </button>
                 </form>
 
-                {/* Notifications */}
                 <div className="border border-border p-8 space-y-6">
                   <h3 className="text-xs font-bold tracking-[0.2em] uppercase border-b border-border pb-4">
                     Communication Preferences
@@ -589,7 +576,6 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Security */}
                 <div className="border border-border p-8 space-y-6">
                   <h3 className="text-xs font-bold tracking-[0.2em] uppercase border-b border-border pb-4 flex items-center justify-between">
                     <span>Account Security</span>
