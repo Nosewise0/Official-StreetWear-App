@@ -92,4 +92,31 @@ router.get("/me", async (req, res) => {
   return res.json({ success: true, user: data.user });
 });
 
+router.put("/profile", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  const { fullName } = req.body;
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: "No token provided." });
+  }
+
+  const { data: userData, error: userError } = await supabase.auth.getUser(token);
+
+  if (userError || !userData.user) {
+    return res.status(401).json({ success: false, message: "Invalid or expired token." });
+  }
+
+  // Update user metadata in Supabase
+  const { data, error } = await supabase.auth.admin.updateUserById(userData.user.id, {
+    user_metadata: { ...userData.user.user_metadata, full_name: fullName || "" },
+  }).catch(() => ({ data: null, error: null }));
+
+  const updatedUser = data?.user || {
+    ...userData.user,
+    user_metadata: { ...userData.user.user_metadata, full_name: fullName || "" },
+  };
+
+  return res.json({ success: true, user: updatedUser, message: "Profile updated successfully." });
+});
+
 module.exports = router;

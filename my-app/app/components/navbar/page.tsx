@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, ShoppingBag, ChevronDown, Menu, X, Sun, Moon, User, Heart, Globe, HelpCircle } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,6 +14,9 @@ export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
   const { totalItems } = useCart();
   const { totalItems: wishlistItems } = useWishlist();
+  const { user } = useAuth();
+
+  const userHref = user ? "/profile" : "/login";
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
@@ -116,7 +120,7 @@ export default function Navbar() {
             <button onClick={toggleTheme} className="flex items-center gap-3 text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
               {isDark ? <Sun className="w-4 h-4" strokeWidth={1} /> : <Moon className="w-4 h-4" strokeWidth={1} />}
             </button>
-            <Link href="/login" className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:block">
+            <Link href={userHref} className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:block">
               <User className="w-5 h-5" strokeWidth={1} />
             </Link>
 
@@ -174,8 +178,8 @@ export default function Navbar() {
           <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-light tracking-widest text-foreground uppercase hover:text-foreground/50 transition-colors">Contact</Link>
 
           <div className="mt-auto pt-8 border-t border-border grid grid-cols-2 gap-6">
-            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
-              <User className="w-4 h-4" strokeWidth={1} /> Account
+            <Link href={userHref} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
+              <User className="w-4 h-4" strokeWidth={1} /> {user ? "Profile" : "Account"}
             </Link>
             <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
               <Heart className="w-4 h-4" strokeWidth={1} /> Wishlist
