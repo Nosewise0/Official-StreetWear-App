@@ -37,12 +37,10 @@ export default function Register() {
     const { error } = await signUp(email, password, name);
 
     if (error) {
-      const code = (error as { code?: string }).code ?? "";
       const isRateLimit =
-        FRIENDLY_ERRORS[code] ||
-        error.message.toLowerCase().includes("rate limit") ||
-        error.message.toLowerCase().includes("too many");
-      setError(isRateLimit ? (FRIENDLY_ERRORS[code] ?? "Too many sign-up attempts. Please wait a few minutes.") : error.message);
+        error.toLowerCase().includes("rate limit") ||
+        error.toLowerCase().includes("too many");
+      setError(isRateLimit ? "Too many sign-up attempts. Please wait a few minutes." : error);
       setLoading(false);
       return;
     }

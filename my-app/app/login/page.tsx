@@ -27,7 +27,7 @@ export default function Login() {
     const { error } = await signIn(email, password);
 
     if (error) {
-      setError(error.message);
+      setError(error);
       setLoading(false);
       return;
     }
@@ -43,7 +43,7 @@ export default function Login() {
     const { error } = await resetPassword(email);
 
     if (error) {
-      setError(error.message);
+      setError(error);
       setLoading(false);
       return;
     }
@@ -85,7 +85,7 @@ export default function Login() {
           
           {resetSent ? (
             <div className="space-y-4 border border-foreground/20 p-8">
-              <p className="text-sm font-medium tracking-[0.1em] uppercase">✅ Reset link sent</p>
+              <p className="text-sm font-medium tracking-widest uppercase">✅ Reset link sent</p>
               <p className="text-sm text-foreground/60 font-light leading-relaxed">
                 Check your inbox for a password reset link.
               </p>
@@ -128,7 +128,7 @@ export default function Login() {
               </div>
 
               {error && (
-                <p className="text-xs font-medium tracking-[0.1em] uppercase text-red-500 border border-red-500/20 bg-red-500/5 px-4 py-3">
+                <p className="text-xs font-medium tracking-widest uppercase text-red-500 border border-red-500/20 bg-red-500/5 px-4 py-3">
                   {error}
                 </p>
               )}
