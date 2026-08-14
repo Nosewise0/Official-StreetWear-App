@@ -121,7 +121,11 @@ export default function Navbar() {
               {isDark ? <Sun className="w-4 h-4" strokeWidth={1} /> : <Moon className="w-4 h-4" strokeWidth={1} />}
             </button>
             <Link href={userHref} className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:block">
-              <User className="w-5 h-5" strokeWidth={1} />
+
+              <span className="relative text-xs font-medium tracking-[0.2em] text-foreground uppercase hover:text-foreground/50 transition-colors">
+                {user ? user.email : <User className="w-5 h-5" strokeWidth={1} />}
+                <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+              </span>
             </Link>
 
             <Link href="/wishlist" className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:flex items-center gap-1.5 group">

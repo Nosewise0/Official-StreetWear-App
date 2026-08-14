@@ -25,7 +25,7 @@ export default function Products() {
     setError(null);
     getProducts({ category: activeCategory })
       .then(setProducts)
-      .catch(() => setError("Failed to load products. Is the server running?"))
+      .catch(() => setError("Products are currently out of stock. Please check back later."))
       .finally(() => setLoading(false));
   }, [activeCategory]);
 
@@ -42,8 +42,8 @@ export default function Products() {
                 key={i}
                 onClick={() => setActiveCategory(cat)}
                 className={`text-[10px] md:text-xs font-medium tracking-[0.2em] uppercase px-4 py-2 border transition-colors duration-300 whitespace-nowrap ${activeCategory === cat
-                    ? "bg-foreground text-background border-foreground"
-                    : "bg-transparent text-foreground/60 border-transparent hover:border-foreground/20 hover:text-foreground"
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-transparent text-foreground/60 border-transparent hover:border-foreground/20 hover:text-foreground"
                   }`}
               >
                 {cat}
@@ -56,7 +56,7 @@ export default function Products() {
           <div className="p-12 border border-border bg-muted flex flex-col items-center justify-center space-y-4">
             <span className="text-3xl">⚠️</span>
             <p className="text-sm text-foreground/80 tracking-widest uppercase font-medium">{error}</p>
-            <button onClick={() => window.location.reload()} className="text-xs underline underline-offset-4">Try Again</button>
+            <button onClick={() => window.location.reload()} className="text-xs underline underline-offset-4 cursor-pointer">Comeback Soon</button>
           </div>
         )}
 

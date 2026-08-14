@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .then((json) => {
         if (json.success) setUser(json.user);
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    await fetch("/api/auth/logout", { method: "POST" }).catch(() => { });
     setUser(null);
   };
 
