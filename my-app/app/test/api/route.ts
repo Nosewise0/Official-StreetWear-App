@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../lib/supabaseServer';
+import { createSupabaseServerClient } from '../../lib/supabaseServer';
 
 export async function GET() {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.from('profiles').select('*');
 
   if (error) {

@@ -1,4 +1,5 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+// All API calls now go through Next.js route handlers (no external Express server needed)
+const BASE_URL = "";
 
 export interface Product {
   id: number;
