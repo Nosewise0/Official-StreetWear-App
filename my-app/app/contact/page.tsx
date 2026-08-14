@@ -11,13 +11,33 @@ export default function Contact() {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setStatus("loading");
 
-    console.log("Contact form submitted:", formData);
-    alert("Thanks for reaching out! We will get back to you shortly.");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || "Something went wrong");
+      }
+
+      alert("Thanks for reaching out! Check your email to confirm.");
+      setFormData({ name: "", email: "", type: "Collaboration", message: "" });
+    } catch (err) {
+      console.error(err);
+      alert("Couldn't send your message. Please try again.");
+    } finally {
+      setStatus("idle");
+    }
   };
-
   return (
     <div className="min-h-[calc(100vh-5rem)] bg-background text-foreground flex flex-col md:flex-row">
 
@@ -34,7 +54,7 @@ export default function Contact() {
             <h4 className="text-xs font-bold tracking-[0.2em] uppercase">Headquarters</h4>
             <div className="flex items-start gap-4 text-sm font-light text-foreground/70">
               <MapPin className="w-4 h-4 mt-1" />
-              <p>123 Fashion District<br />Los Angeles, CA 90015<br />United States</p>
+              <p>Bogo City, Nailon<br />Cebu, 6010<br />Philippines</p>
             </div>
           </div>
 
