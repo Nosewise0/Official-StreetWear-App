@@ -5,7 +5,7 @@ export default function About() {
   return (
     <section className="relative py-20 bg-background" id="about">
       <div className="container mx-auto px-6 max-w-7xl">
-        
+
 
         <div className="max-w-4xl mx-auto text-center space-y-8 mb-24">
           <p className="text-sm font-medium tracking-[0.3em] uppercase text-foreground/50">Our Manifesto</p>
@@ -15,7 +15,7 @@ export default function About() {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          
+
 
           <div className="w-full lg:w-1/2 relative">
             <div className="relative h-[500px] w-full bg-muted overflow-hidden group">
@@ -28,7 +28,7 @@ export default function About() {
 
             <div className="absolute -bottom-10 -right-4 lg:-right-10 bg-background p-6 border border-border shadow-xl flex items-center gap-6">
               <div className="flex flex-col">
-                <span className="font-light text-3xl text-foreground">50k+</span>
+                <span className="font-light text-3xl text-foreground">0</span>
                 <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-foreground/60">Orders Shipped</span>
               </div>
               <div className="w-[1px] h-12 bg-border"></div>
@@ -49,7 +49,7 @@ export default function About() {
                 Born from the concrete jungles, Official StreetWear is a movement. We blend high-end fashion aesthetics with raw, unfiltered street culture to create pieces that speak for themselves. Our garments are designed to last, visually and physically.
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 gap-6 pt-6 border-t border-border">
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-muted border border-border"><Shield className="w-5 h-5 text-foreground" /></div>
@@ -58,7 +58,7 @@ export default function About() {
                   <p className="text-sm text-foreground/60 font-light mt-1">Handpicked heavyweight cottons and technical fabrics ensuring maximum durability.</p>
                 </div>
               </div>
-              
+
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-muted border border-border"><Zap className="w-5 h-5 text-foreground" /></div>
                 <div>
@@ -77,10 +77,10 @@ export default function About() {
             </div>
 
             <div className="pt-6">
-               <a href="#products" className="inline-flex items-center gap-4 text-xs font-medium tracking-[0.2em] uppercase text-foreground hover:text-foreground/70 transition-colors">
-                  <span>Explore the collection</span>
-                  <ArrowRight className="w-4 h-4" />
-               </a>
+              <a href="#products" className="inline-flex items-center gap-4 text-xs font-medium tracking-[0.2em] uppercase text-foreground hover:text-foreground/70 transition-colors">
+                <span>Explore the collection</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
             </div>
           </div>
 

@@ -35,7 +35,7 @@ export default function Home() {
             <div className="w-full lg:w-1/2 flex flex-col items-start space-y-8">
               <div className="inline-flex items-center gap-2 border border-foreground/20 px-4 py-2">
                 <Star className="w-4 h-4 fill-foreground" />
-                <span className="text-[10px] font-bold tracking-widest uppercase">Rated 4.9/5 by 10k+ Customers</span>
+                <span className="text-[10px] font-bold tracking-widest uppercase">Rated 0/5 by 0 Customers, Shop and rate us</span>
               </div>
               <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-light tracking-tighter text-foreground uppercase leading-[0.9]">
                 Define <br /><span className="font-medium italic">Yourself</span>
