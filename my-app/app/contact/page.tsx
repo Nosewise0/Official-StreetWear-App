@@ -139,7 +139,7 @@ export default function Contact() {
               type="submit"
               className="group relative w-full inline-flex items-center justify-between bg-foreground text-background px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase hover:bg-foreground/90 transition-colors"
             >
-              <span>Submit Inquiry</span>
+              <span>{status === "loading" ? "Sending..." : "Submit Inquiry"}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
             </button>
           </form>

@@ -1,18 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getProducts, getCategories, type Product } from "../lib/api";
-import { ShoppingBag } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function Products() {
-  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     getCategories()
@@ -22,16 +19,18 @@ export default function Products() {
 
   useEffect(() => {
     setLoading(true);
-    setError(null);
     getProducts({ category: activeCategory })
       .then(setProducts)
-      .catch(() => setError("Products are currently out of stock. Please check back later."))
+      .catch(() => setProducts([]))
       .finally(() => setLoading(false));
   }, [activeCategory]);
 
+  const isEmpty = !loading && products.length === 0;
+
   return (
-    <section className="w-full bg-background py-16" id="products">
+    <section className="w-full bg-background py-16 min-h-[calc(100vh-5rem)]" id="products">
       <div className="container mx-auto px-6 max-w-7xl">
+
         <div className="flex flex-col space-y-8 mb-16">
           <h2 className="text-4xl md:text-6xl font-light tracking-tighter text-foreground uppercase text-center">
             Shop The <span className="font-medium italic">Collection</span>
@@ -52,15 +51,7 @@ export default function Products() {
           </div>
         </div>
 
-        {error && (
-          <div className="p-12 border border-border bg-muted flex flex-col items-center justify-center space-y-4">
-            <span className="text-3xl">⚠️</span>
-            <p className="text-sm text-foreground/80 tracking-widest uppercase font-medium">{error}</p>
-            <button onClick={() => window.location.reload()} className="text-xs underline underline-offset-4 cursor-pointer">Comeback Soon</button>
-          </div>
-        )}
-
-        {loading && !error && (
+        {loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
               <div key={i} className="animate-pulse flex flex-col">
@@ -72,19 +63,80 @@ export default function Products() {
           </div>
         )}
 
-        {!loading && !error && (
+        {isEmpty && (
+          <div className="flex flex-col items-center justify-center py-24 space-y-0">
+
+            <div className="relative w-full max-w-2xl mb-16">
+              <div
+                className="absolute inset-0 opacity-[0.04]"
+                style={{
+                  backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)",
+                  backgroundSize: "24px 24px",
+                }}
+              />
+              <div className="relative text-center py-20 px-8 border border-border">
+                <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/40 mb-6">
+                  OSW — Official StreetWear
+                </p>
+                <h3 className="text-5xl md:text-7xl font-light tracking-[0.15em] uppercase text-foreground mb-4">
+                  Coming
+                </h3>
+                <h3 className="text-5xl md:text-7xl font-medium italic tracking-[0.1em] uppercase text-foreground">
+                  Soon.
+                </h3>
+                <div className="w-12 h-px bg-foreground/30 mx-auto my-8" />
+                <p className="text-sm font-light text-foreground/50 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
+                  The collection is being prepared. Something worth waiting for.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border w-full max-w-2xl">
+              {["Drop 001", "Drop 002", "Drop 003"].map((drop, i) => (
+                <div
+                  key={i}
+                  className="bg-background px-8 py-10 flex flex-col items-center space-y-3 opacity-40"
+                >
+                  <div className="aspect-[3/4] w-16 bg-muted" />
+                  <div className="h-2 w-20 bg-muted rounded-sm" />
+                  <p className="text-[9px] tracking-[0.25em] uppercase text-foreground/40">{drop}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-16 flex flex-col sm:flex-row items-center gap-4">
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-3 bg-foreground text-background text-[10px] font-medium tracking-[0.25em] uppercase px-8 py-4 hover:bg-foreground/90 transition-colors"
+              >
+                Get Notified
+                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+              <Link
+                href="/"
+                className="text-[10px] font-medium tracking-[0.25em] uppercase text-foreground/50 hover:text-foreground transition-colors underline underline-offset-4"
+              >
+                Back to Home
+              </Link>
+            </div>
+
+          </div>
+        )}
+
+        {!loading && !isEmpty && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
             {products.map((product, idx) => (
               <Link key={product.id} href={`/products/${product.id}`} className="group flex flex-col relative">
-
                 <div className="aspect-[3/4] bg-muted relative overflow-hidden mb-4 cursor-pointer">
-
                   <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-foreground font-light text-xl uppercase tracking-widest relative transition-transform duration-700 group-hover:scale-105">
-                    <span className="z-10 bg-background/50 backdrop-blur-sm px-3 py-1 text-sm border border-foreground/10">{product.name.split(' ')[0]}</span>
-                    <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
+                    <span className="z-10 bg-background/50 backdrop-blur-sm px-3 py-1 text-sm border border-foreground/10">
+                      {product.name.split(" ")[0]}
+                    </span>
+                    <div
+                      className="absolute inset-0 opacity-5"
+                      style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }}
+                    />
                   </div>
-
-
                   {idx === 0 && (
                     <div className="absolute top-4 left-4 bg-foreground text-background text-[10px] font-bold tracking-widest uppercase px-3 py-1">
                       New Arrival
@@ -95,19 +147,7 @@ export default function Products() {
                       Best Seller
                     </div>
                   )}
-
-
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out flex gap-2">
-                    <button
-                      onClick={(e) => { e.preventDefault(); router.push(`/products/${product.id}`); }}
-                      className="flex-1 bg-background text-foreground font-medium text-xs tracking-widest uppercase py-3 border border-border hover:bg-foreground hover:text-background transition-colors flex items-center justify-center gap-2"
-                    >
-                      <ShoppingBag className="w-4 h-4" /> Quick Add
-                    </button>
-                  </div>
                 </div>
-
-
                 <div className="flex flex-col space-y-1 px-1">
                   <div className="flex justify-between items-start gap-4">
                     <h3 className="text-sm font-medium uppercase tracking-wider text-foreground leading-snug cursor-pointer group-hover:underline underline-offset-4 decoration-foreground/30">
@@ -125,6 +165,7 @@ export default function Products() {
             ))}
           </div>
         )}
+
       </div>
     </section>
   );
