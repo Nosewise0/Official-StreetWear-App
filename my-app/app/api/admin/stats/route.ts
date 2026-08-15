@@ -1,0 +1,26 @@
+import { NextResponse } from "next/server";
+import { supabaseAdmin } from "../../../lib/supabase/supaBaseAdmin";
+import { createSupabaseServerClient } from "../../../lib/supabaseServer";
+
+const ADMIN_EMAIL = "admin1@gmail.com";
+
+export async function GET() {
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || user.email !== ADMIN_EMAIL) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const [products, contacts, users] = await Promise.all([
+    supabaseAdmin.from("products").select("*", { count: "exact", head: true }),
+    supabaseAdmin.from("contact_submissions").select("*", { count: "exact", head: true }),
+    supabaseAdmin.auth.admin.listUsers(),
+  ]);
+
+  return NextResponse.json({
+    products: products.count ?? 0,
+    contacts: contacts.count ?? 0,
+    users: users.data?.users?.length ?? 0,
+  });
+}
