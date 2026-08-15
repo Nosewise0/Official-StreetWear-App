@@ -232,8 +232,16 @@ export default function ProductDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-[55fr_45fr] gap-10 lg:gap-20">
 
           <div className="flex flex-col gap-3">
-            <div className="aspect-[3/4] w-full relative overflow-hidden">
-              <Placeholder seed={id + activeThumb} large label={product.category} />
+            <div className="aspect-[3/4] w-full relative overflow-hidden bg-muted">
+              {product.image && activeThumb === 0 ? (
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Placeholder seed={id + activeThumb} large label={product.category} />
+              )}
             </div>
             <div className="grid grid-cols-4 gap-3">
               {[0, 1, 2, 3].map((i) => (
@@ -243,7 +251,15 @@ export default function ProductDetail() {
                   className={`aspect-square relative overflow-hidden border-2 transition-colors ${activeThumb === i ? "border-foreground" : "border-transparent hover:border-border"
                     }`}
                 >
-                  <Placeholder seed={id + i} />
+                  {product.image && i === 0 ? (
+                    <img
+                      src={product.image}
+                      alt={`${product.name} thumbnail`}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Placeholder seed={id + i} />
+                  )}
                 </button>
               ))}
             </div>
@@ -446,7 +462,15 @@ export default function ProductDetail() {
                 <Link key={rel.id} href={`/products/${rel.id}`} className="group flex flex-col">
                   <div className="aspect-[3/4] bg-muted relative overflow-hidden mb-4">
                     <div className="w-full h-full transition-transform duration-700 group-hover:scale-105">
-                      <Placeholder seed={rel.id} />
+                      {rel.image ? (
+                        <img
+                          src={rel.image}
+                          alt={rel.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Placeholder seed={rel.id} />
+                      )}
                     </div>
                   </div>
                   <div className="space-y-1 px-1">

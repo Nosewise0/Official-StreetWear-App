@@ -14,7 +14,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 
-const ADMIN_EMAIL = "admin1@gmail.com";
+const ADMIN_EMAILS = ["admin1@gmail.com", "nonsaker021@gmail.com"];
 
 const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
@@ -45,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!user) return null;
 
-  if (user.email !== ADMIN_EMAIL) {
+  if (!user.email || !ADMIN_EMAILS.includes(user.email)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-6 max-w-sm px-8">

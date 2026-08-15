@@ -12,6 +12,7 @@ interface Product {
   stock: number;
   sizes: string[];
   colors: string[];
+  image?: string | null;
 }
 
 const EMPTY_FORM = {
@@ -22,6 +23,7 @@ const EMPTY_FORM = {
   stock: "",
   sizes: "",
   colors: "",
+  image: "",
 };
 
 export default function AdminProducts() {
@@ -66,6 +68,7 @@ export default function AdminProducts() {
       stock: String(p.stock ?? 0),
       sizes: (p.sizes ?? []).join(", "),
       colors: (p.colors ?? []).join(", "),
+      image: p.image ?? "",
     });
     setModal("edit");
   };
@@ -80,6 +83,7 @@ export default function AdminProducts() {
       stock: parseInt(form.stock) || 0,
       sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
+      image: form.image || null,
     };
 
     const url = modal === "edit" && selected ? `/api/admin/products/${selected.id}` : "/api/admin/products";
@@ -161,7 +165,7 @@ export default function AdminProducts() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-muted">
-                {["Name", "Category", "Price", "Stock", "Sizes", ""].map((h) => (
+                {["Image", "Name", "Category", "Price", "Stock", "Sizes", ""].map((h) => (
                   <th key={h} className="text-left text-[9px] tracking-[0.2em] uppercase text-foreground/50 px-5 py-4 font-medium">
                     {h}
                   </th>
@@ -171,6 +175,15 @@ export default function AdminProducts() {
             <tbody className="divide-y divide-border">
               {products.map((p) => (
                 <tr key={p.id} className="hover:bg-muted/50 transition-colors">
+                  <td className="px-5 py-4">
+                    {p.image ? (
+                      <img src={p.image} alt={p.name} className="w-10 h-10 object-cover border border-border" />
+                    ) : (
+                      <div className="w-10 h-10 bg-muted flex items-center justify-center text-[10px] text-foreground/40 font-bold border border-border">
+                        N/A
+                      </div>
+                    )}
+                  </td>
                   <td className="px-5 py-4 font-medium">{p.name}</td>
                   <td className="px-5 py-4 text-foreground/60 text-xs tracking-widest uppercase">{p.category}</td>
                   <td className="px-5 py-4">${p.price}</td>
@@ -221,6 +234,7 @@ export default function AdminProducts() {
                   { key: "category", label: "Category", placeholder: "e.g. T-Shirts" },
                   { key: "price", label: "Price (USD)", placeholder: "e.g. 49.99", type: "number" },
                   { key: "stock", label: "Stock", placeholder: "e.g. 100", type: "number" },
+                  { key: "image", label: "Image URL", placeholder: "e.g. https://images.unsplash.com/..." },
                   { key: "sizes", label: "Sizes (comma-separated)", placeholder: "S, M, L, XL" },
                   { key: "colors", label: "Colors (comma-separated)", placeholder: "Black, White" },
                 ] as { key: string; label: string; placeholder: string; type?: string }[]
@@ -234,6 +248,11 @@ export default function AdminProducts() {
                     placeholder={placeholder}
                     className="w-full bg-transparent border-b border-border py-2 text-sm focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20"
                   />
+                  {key === "image" && form.image && (
+                    <div className="mt-2 w-20 h-20 border border-border overflow-hidden">
+                      <img src={form.image} alt="Preview" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.style.display = "none")} />
+                    </div>
+                  )}
                 </div>
               ))}
               <div className="space-y-2">

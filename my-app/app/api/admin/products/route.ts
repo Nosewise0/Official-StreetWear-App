@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../lib/supabase/supaBaseAdmin";
 import { createSupabaseServerClient } from "../../../lib/supabaseServer";
 
-const ADMIN_EMAIL = "nonsaker021@gmail.com";
+const ADMIN_EMAILS = ["admin1@gmail.com", "nonsaker021@gmail.com"];
 
 async function checkAdmin() {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  return user?.email === ADMIN_EMAIL ? user : null;
+  return user && user.email && ADMIN_EMAILS.includes(user.email) ? user : null;
 }
 
 export async function GET() {
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { name, category, price, description, stock, sizes, colors } = body;
+  const { name, category, price, description, stock, sizes, colors, image } = body;
 
   if (!name || !category || price == null) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
   const { data, error } = await supabaseAdmin
     .from("products")
-    .insert([{ name, category, price, description, stock: stock ?? 0, sizes: sizes ?? [], colors: colors ?? [], image: null }])
+    .insert([{ name, category, price, description, stock: stock ?? 0, sizes: sizes ?? [], colors: colors ?? [], image: image || null }])
     .select()
     .single();
 
