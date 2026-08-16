@@ -11,10 +11,14 @@ import {
   Minus,
   Plus,
   ArrowLeft,
+  AlertCircle,
+  LogIn,
+  Lock,
 } from "lucide-react";
 import { getProductById, getProducts, type Product } from "../../lib/api";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
+import { useAuth } from "../../context/AuthContext";
 
 const COLOR_CSS: Record<string, string> = {
   black: "#1a1a1a",
@@ -108,6 +112,7 @@ export default function ProductDetail() {
   const id = Number(params.id);
   const { addItem } = useCart();
   const { toggleItem, isWishlisted } = useWishlist();
+  const { user } = useAuth();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [related, setRelated] = useState<Product[]>([]);
@@ -117,7 +122,7 @@ export default function ProductDetail() {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const [addedState, setAddedState] = useState<"idle" | "needsSize" | "added">("idle");
+  const [addedState, setAddedState] = useState<"idle" | "needsSize" | "added" | "needsLogin">("idle");
   const [activeThumb, setActiveThumb] = useState(0);
 
   useEffect(() => {
@@ -142,6 +147,15 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (!product) return;
+    if (!user) {
+      if (addedState === "needsLogin") {
+        router.push(`/login?redirect=/products/${product.id}`);
+        return;
+      }
+      setAddedState("needsLogin");
+      setTimeout(() => setAddedState("idle"), 3500);
+      return;
+    }
     if (!selectedSize) {
       setAddedState("needsSize");
       setTimeout(() => setAddedState("idle"), 2500);
@@ -365,30 +379,52 @@ export default function ProductDetail() {
                 </p>
               </div>
 
+              {addedState === "needsLogin" && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-medium tracking-wide flex items-center justify-between animate-pulse">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>Please login first to add to cart</span>
+                  </div>
+                  <Link
+                    href={`/login?redirect=/products/${product.id}`}
+                    className="underline font-bold uppercase ml-2 text-[10px]"
+                  >
+                    Login Now
+                  </Link>
+                </div>
+              )}
+
               <button
                 id={`add-to-cart-${product.id}`}
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
-                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all duration-200 ${addedState === "added"
+                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all duration-200 ${
+                  addedState === "added"
                     ? "bg-foreground text-background"
                     : addedState === "needsSize"
                       ? "bg-foreground/80 text-background"
-                      : product.stock === 0
-                        ? "bg-muted text-foreground/30 cursor-not-allowed"
-                        : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
-                  }`}
+                      : addedState === "needsLogin"
+                        ? "bg-red-600 text-white hover:bg-red-700"
+                        : product.stock === 0
+                          ? "bg-muted text-foreground/30 cursor-not-allowed"
+                          : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
+                }`}
               >
                 <span>
                   {addedState === "added"
                     ? "Added to Cart!"
                     : addedState === "needsSize"
                       ? "Select a Size First"
-                      : product.stock === 0
-                        ? "Out of Stock"
-                        : "Add to Cart"}
+                      : addedState === "needsLogin"
+                        ? "Please Login First"
+                        : product.stock === 0
+                          ? "Out of Stock"
+                          : "Add to Cart"}
                 </span>
                 {addedState === "added" ? (
                   <Check className="w-4 h-4" strokeWidth={2} />
+                ) : addedState === "needsLogin" ? (
+                  <LogIn className="w-4 h-4" strokeWidth={2} />
                 ) : (
                   <ShoppingBag className="w-4 h-4 group-hover:scale-110 transition-transform" strokeWidth={1} />
                 )}

@@ -26,10 +26,10 @@ export async function POST(request: NextRequest) {
       success: true,
       user: data.user
         ? {
-            id: data.user.id,
-            email: data.user.email,
-            user_metadata: data.user.user_metadata,
-          }
+          id: data.user.id,
+          email: data.user.email,
+          user_metadata: data.user.user_metadata,
+        }
         : null,
     });
   } catch {

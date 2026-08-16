@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { X, Heart, ArrowRight, ArrowLeft, ShoppingBag, Sparkles } from "lucide-react";
+import { X, Heart, ArrowRight, ArrowLeft, ShoppingBag, Sparkles, AlertCircle, LogIn } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 const PATTERNS = [
   { img: "radial-gradient(circle, currentColor 1px, transparent 1px)", size: "16px 16px" },
@@ -29,8 +31,15 @@ export default function WishlistPage() {
   const router = useRouter();
   const { items, removeItem, clearWishlist, totalItems } = useWishlist();
   const { addItem } = useCart();
+  const { user } = useAuth();
+  const [loginPrompt, setLoginPrompt] = useState(false);
 
   function moveToCart(item: typeof items[0]) {
+    if (!user) {
+      setLoginPrompt(true);
+      setTimeout(() => setLoginPrompt(false), 3000);
+      return;
+    }
     addItem(
       {
         id: item.id,
@@ -47,6 +56,11 @@ export default function WishlistPage() {
   }
 
   function moveAllToCart() {
+    if (!user) {
+      setLoginPrompt(true);
+      setTimeout(() => setLoginPrompt(false), 3000);
+      return;
+    }
     items.forEach((item) => moveToCart(item));
   }
 

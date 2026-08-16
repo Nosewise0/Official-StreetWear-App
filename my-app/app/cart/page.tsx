@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Minus, Plus, X, ShoppingBag, ArrowRight, ArrowLeft, Truck, RotateCcw, ShieldCheck } from "lucide-react";
+import { Minus, Plus, X, ShoppingBag, ArrowRight, ArrowLeft, Truck, RotateCcw, ShieldCheck, LogIn, AlertCircle } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 const FREE_SHIPPING_THRESHOLD = 150;
 
@@ -29,6 +31,20 @@ function ItemPlaceholder({ seed }: { seed: number }) {
 export default function CartPage() {
   const router = useRouter();
   const { items, removeItem, updateQuantity, clearCart, totalItems, totalPrice } = useCart();
+  const { user, loading: authLoading } = useAuth();
+  const [loginPrompt, setLoginPrompt] = useState(false);
+
+  const handleCheckout = () => {
+    if (!user) {
+      setLoginPrompt(true);
+      setTimeout(() => {
+        router.push("/login?redirect=/checkout");
+      }, 1500);
+      return;
+    }
+    router.push("/checkout");
+  };
+
 
   const toFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - totalPrice);
   const shippingProgress = Math.min(100, (totalPrice / FREE_SHIPPING_THRESHOLD) * 100);
@@ -80,6 +96,29 @@ export default function CartPage() {
       </div>
 
       <div className="container mx-auto px-6 max-w-7xl py-10 lg:py-16">
+        {!authLoading && !user && (
+          <div className="mb-8 p-4 border border-foreground/20 bg-muted/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-foreground shrink-0" />
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                  You are not logged in
+                </p>
+                <p className="text-xs text-foreground/70 font-light">
+                  Please log in to save your cart and proceed to checkout.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/login?redirect=/cart"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-foreground text-background text-xs font-medium tracking-[0.2em] uppercase hover:bg-foreground/90 transition-colors whitespace-nowrap"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Login First</span>
+            </Link>
+          </div>
+        )}
+
         <div className="flex items-baseline justify-between mb-10">
           <h1 className="text-3xl md:text-4xl font-light tracking-tight uppercase text-foreground">
             Shopping Cart
@@ -294,12 +333,31 @@ export default function CartPage() {
             </div>
 
             <div className="px-6 pb-6 space-y-3">
+              {loginPrompt && !user && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-medium tracking-wide flex items-center justify-between animate-pulse">
+                  <span>Please login first to proceed to checkout!</span>
+                  <Link href="/login?redirect=/checkout" className="underline font-bold uppercase ml-2 text-[10px]">
+                    Login Now
+                  </Link>
+                </div>
+              )}
+
               <button
                 id="proceed-to-checkout"
-                onClick={() => router.push("/checkout")}
-                className="group w-full inline-flex items-center justify-between px-6 py-5 bg-foreground text-background text-xs font-medium tracking-[0.2em] uppercase hover:bg-foreground/90 active:scale-[0.99] transition-all"
+                onClick={handleCheckout}
+                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all ${
+                  loginPrompt && !user
+                    ? "bg-red-600 text-white"
+                    : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
+                }`}
               >
-                <span>Proceed to Checkout</span>
+                <span>
+                  {loginPrompt && !user
+                    ? "Please Login First"
+                    : !user && !authLoading
+                    ? "Proceed to Checkout"
+                    : "Proceed to Checkout"}
+                </span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
               </button>
 
