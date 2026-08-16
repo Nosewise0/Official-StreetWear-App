@@ -467,17 +467,29 @@ export default function ProductDetail() {
               <button
                 id={`add-to-wishlist-${product.id}`}
                 onClick={handleAddToWishlist}
-                className={`group w-full inline-flex items-center justify-between px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase border transition-colors ${isWishlisted(product.id)
-                  ? "border-foreground bg-muted"
-                  : "border-border hover:border-foreground"
+                className={`group w-full inline-flex items-center justify-between px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase border transition-colors ${wishlistState === "needsLogin"
+                  ? "bg-red-600 text-white border-red-600 hover:bg-red-700"
+                  : isWishlisted(product.id)
+                    ? "border-foreground bg-muted"
+                    : "border-border hover:border-foreground"
                   }`}
               >
-                <span>{isWishlisted(product.id) ? "Wishlisted" : "Add to Wishlist"}</span>
-                <Heart
-                  className={`w-4 h-4 transition-all duration-200 ${isWishlisted(product.id) ? "fill-foreground" : "group-hover:fill-foreground"
-                    }`}
-                  strokeWidth={1}
-                />
+                <span>
+                  {wishlistState === "needsLogin"
+                    ? "Please Login First"
+                    : isWishlisted(product.id)
+                      ? "Wishlisted"
+                      : "Add to Wishlist"}
+                </span>
+                {wishlistState === "needsLogin" ? (
+                  <LogIn className="w-4 h-4" strokeWidth={2} />
+                ) : (
+                  <Heart
+                    className={`w-4 h-4 transition-all duration-200 ${isWishlisted(product.id) ? "fill-foreground" : "group-hover:fill-foreground"
+                      }`}
+                    strokeWidth={1}
+                  />
+                )}
               </button>
             </div>
 
