@@ -345,18 +345,17 @@ export default function CartPage() {
               <button
                 id="proceed-to-checkout"
                 onClick={handleCheckout}
-                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all ${
-                  loginPrompt && !user
-                    ? "bg-red-600 text-white"
-                    : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
-                }`}
+                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all ${loginPrompt && !user
+                  ? "bg-red-600 text-white"
+                  : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
+                  }`}
               >
                 <span>
                   {loginPrompt && !user
                     ? "Please Login First"
                     : !user && !authLoading
-                    ? "Proceed to Checkout"
-                    : "Proceed to Checkout"}
+                      ? "Proceed to Checkout"
+                      : "Proceed to Checkout"}
                 </span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
               </button>

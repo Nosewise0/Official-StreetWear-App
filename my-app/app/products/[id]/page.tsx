@@ -124,6 +124,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [addedState, setAddedState] = useState<"idle" | "needsSize" | "added" | "needsLogin">("idle");
   const [activeThumb, setActiveThumb] = useState(0);
+  const [wishlistState, setWishlistState] = useState<"idle" | "added" | "needsLogin">("idle");
 
   useEffect(() => {
     if (!id) return;
@@ -144,6 +145,26 @@ export default function ProductDetail() {
       .catch(() => setError("Failed to load product. Is the server running?"))
       .finally(() => setLoading(false));
   }, [id]);
+
+  const handleAddToWishlist = () => {
+    if (!product) return;
+    if (!user) {
+      if (wishlistState === "needsLogin") {
+        router.push(`/login?redirect=/products/${product.id}`);
+        return;
+      }
+      setWishlistState("needsLogin");
+      setTimeout(() => setWishlistState("idle"), 3500);
+      return;
+    }
+    toggleItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      category: product.category,
+      image: product.image,
+    });
+  }
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -315,8 +336,8 @@ export default function ProductDetail() {
                       title={color}
                       style={{ backgroundColor: getColorCss(color) }}
                       className={`w-8 h-8 border-2 transition-all duration-150 ${selectedColor === color
-                          ? "border-foreground ring-2 ring-offset-2 ring-foreground/30"
-                          : "border-transparent hover:border-border"
+                        ? "border-foreground ring-2 ring-offset-2 ring-foreground/30"
+                        : "border-transparent hover:border-border"
                         }`}
                     />
                   ))}
@@ -342,8 +363,8 @@ export default function ProductDetail() {
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={`px-4 py-2.5 text-xs font-medium tracking-[0.15em] uppercase border transition-all duration-150 ${selectedSize === size
-                          ? "bg-foreground text-background border-foreground"
-                          : "bg-transparent text-foreground/70 border-border hover:border-foreground hover:text-foreground"
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-transparent text-foreground/70 border-border hover:border-foreground hover:text-foreground"
                         }`}
                     >
                       {size}
@@ -393,22 +414,35 @@ export default function ProductDetail() {
                   </Link>
                 </div>
               )}
+              {wishlistState === "needsLogin" && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-medium tracking-wide flex items-center justify-between animate-pulse">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>Please login first to add to wishlist</span>
+                  </div>
+                  <Link
+                    href={`/login?redirect=/products/${product.id}`}
+                    className="underline font-bold uppercase ml-2 text-[10px]"
+                  >
+                    Login Now
+                  </Link>
+                </div>
+              )}
 
               <button
                 id={`add-to-cart-${product.id}`}
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
-                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all duration-200 ${
-                  addedState === "added"
-                    ? "bg-foreground text-background"
-                    : addedState === "needsSize"
-                      ? "bg-foreground/80 text-background"
-                      : addedState === "needsLogin"
-                        ? "bg-red-600 text-white hover:bg-red-700"
-                        : product.stock === 0
-                          ? "bg-muted text-foreground/30 cursor-not-allowed"
-                          : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
-                }`}
+                className={`group w-full inline-flex items-center justify-between px-6 py-5 text-xs font-medium tracking-[0.2em] uppercase transition-all duration-200 ${addedState === "added"
+                  ? "bg-foreground text-background"
+                  : addedState === "needsSize"
+                    ? "bg-foreground/80 text-background"
+                    : addedState === "needsLogin"
+                      ? "bg-red-600 text-white hover:bg-red-700"
+                      : product.stock === 0
+                        ? "bg-muted text-foreground/30 cursor-not-allowed"
+                        : "bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99]"
+                  }`}
               >
                 <span>
                   {addedState === "added"
@@ -432,10 +466,10 @@ export default function ProductDetail() {
 
               <button
                 id={`add-to-wishlist-${product.id}`}
-                onClick={() => toggleItem({ id: product.id, name: product.name, price: product.price, category: product.category, image: product.image })}
+                onClick={handleAddToWishlist}
                 className={`group w-full inline-flex items-center justify-between px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase border transition-colors ${isWishlisted(product.id)
-                    ? "border-foreground bg-muted"
-                    : "border-border hover:border-foreground"
+                  ? "border-foreground bg-muted"
+                  : "border-border hover:border-foreground"
                   }`}
               >
                 <span>{isWishlisted(product.id) ? "Wishlisted" : "Add to Wishlist"}</span>
