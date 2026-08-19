@@ -18,7 +18,7 @@ export default function Navbar() {
 
   const userHref = user ? "/profile" : "/login";
 
- 
+
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
@@ -127,8 +127,8 @@ export default function Navbar() {
                 {user ? user.email : <User className="w-5 h-5" strokeWidth={1} />}
                 <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-foreground scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
               </span>
-            </Link> 
-              {user && (
+            </Link>
+
             <Link href="/wishlist" className="text-foreground hover:text-foreground/50 transition-colors duration-300 hidden md:flex items-center gap-1.5 group">
               <Heart className="w-5 h-5" strokeWidth={1} />
               {wishlistItems > 0 && (
@@ -137,19 +137,19 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-            )}
-            {user && (
+
+
             <Link href="/cart" className="text-foreground hover:text-foreground/50 transition-colors duration-300 flex items-center gap-2 group">
               <ShoppingBag className="w-5 h-5" strokeWidth={1} />
               <span className="bg-foreground text-background text-[10px] font-bold w-5 h-5 flex items-center justify-center transition-colors group-hover:bg-foreground/80">
                 {totalItems}
               </span>
-              
+
             </Link>
-            )}
+
           </div>
         </div>
-              
+
         <div className={`w-full bg-background border-b border-border overflow-hidden transition-all duration-300 ${isSearchOpen ? "max-h-24 opacity-100 py-6" : "max-h-0 opacity-0 py-0 border-transparent"}`}>
           <div className="container mx-auto px-6 max-w-2xl flex items-center">
             <Search className="w-5 h-5 text-foreground/40 mr-4" strokeWidth={1} />

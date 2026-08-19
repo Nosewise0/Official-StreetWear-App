@@ -126,6 +126,7 @@ export default function ProductDetail() {
   const [activeThumb, setActiveThumb] = useState(0);
   const [wishlistState, setWishlistState] = useState<"idle" | "added" | "needsLogin">("idle");
 
+
   useEffect(() => {
     if (!id) return;
     setLoading(true);

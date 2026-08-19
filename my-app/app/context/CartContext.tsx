@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { useAuth } from "./AuthContext";
 
 export interface CartItem {
   id: number;
@@ -32,27 +33,44 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null);
 
-const STORAGE_KEY = "osw-cart";
+// Guest cart key (used when no user is logged in)
+const GUEST_KEY = "osw-cart-guest";
+
+function getStorageKey(userId: string | undefined) {
+  return userId ? `osw-cart-${userId}` : GUEST_KEY;
+}
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  // Track which storage key was last loaded so we can re-hydrate on user change
+  const [currentKey, setCurrentKey] = useState<string | null>(null);
 
+  // Re-hydrate cart whenever auth resolves or the logged-in user changes
   useEffect(() => {
+    if (authLoading) return; // wait for auth to settle before reading storage
+
+    const key = getStorageKey(user?.id);
+
+    if (key === currentKey) return; // already loaded for this user/guest
+
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setItems(JSON.parse(stored));
+      const stored = localStorage.getItem(key);
+      setItems(stored ? JSON.parse(stored) : []);
     } catch {
-      // ignore parse errors
+      setItems([]);
     }
-    setHydrated(true);
-  }, []);
 
+    setCurrentKey(key);
+    setHydrated(true);
+  }, [user?.id, authLoading, currentKey]);
+
+  // Persist cart to the current user's key whenever items change
   useEffect(() => {
-    if (hydrated) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }
-  }, [items, hydrated]);
+    if (!hydrated || !currentKey) return;
+    localStorage.setItem(currentKey, JSON.stringify(items));
+  }, [items, hydrated, currentKey]);
 
   const addItem = useCallback(
     (product: Omit<CartItem, "quantity">, quantity = 1) => {
