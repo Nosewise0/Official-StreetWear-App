@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { useAuth } from "./AuthContext";
 
 export interface WishlistItem {
   id: number;
@@ -29,25 +30,42 @@ interface WishlistContextType {
 
 const WishlistContext = createContext<WishlistContextType | null>(null);
 
-const STORAGE_KEY = "osw-wishlist";
+const GUEST_STORAGE_KEY = "osw-wishlist-guest";
+
+function getStorageKey(userId: string | undefined) {
+  return userId ? `osw-wishlist-${userId}` : GUEST_STORAGE_KEY;
+}
 
 export function WishlistProvider({ children }: { children: ReactNode }) {
+  const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [currentKey, setCurrentKey] = useState<string | null>(null);
+
 
   useEffect(() => {
+    if (authLoading) return;
+
+    const key = getStorageKey(user?.id);
+
+    if (key === currentKey) return;
+
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setItems(JSON.parse(stored));
-    } catch { }
+      const stored = localStorage.getItem(key);
+      setItems(stored ? JSON.parse(stored) : []);
+    } catch {
+      setItems([]);
+    }
+
+    setCurrentKey(key);
     setHydrated(true);
-  }, []);
+  }, [user?.id, authLoading, currentKey]);
+
 
   useEffect(() => {
-    if (hydrated) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }
-  }, [items, hydrated]);
+    if (!hydrated || !currentKey) return;
+    localStorage.setItem(currentKey, JSON.stringify(items));
+  }, [items, hydrated, currentKey]);
 
   const addItem = useCallback((product: WishlistItem) => {
     setItems((prev) => {
@@ -60,17 +78,14 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);
 
-  const toggleItem = useCallback(
-    (product: WishlistItem) => {
-      setItems((prev) => {
-        if (prev.find((i) => i.id === product.id)) {
-          return prev.filter((i) => i.id !== product.id);
-        }
-        return [...prev, product];
-      });
-    },
-    []
-  );
+  const toggleItem = useCallback((product: WishlistItem) => {
+    setItems((prev) => {
+      if (prev.find((i) => i.id === product.id)) {
+        return prev.filter((i) => i.id !== product.id);
+      }
+      return [...prev, product];
+    });
+  }, []);
 
   const isWishlisted = useCallback(
     (id: number) => items.some((i) => i.id === id),
