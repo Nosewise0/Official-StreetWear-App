@@ -1,15 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getProducts, getCategories, type Product } from "../lib/api";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 
 export default function Products() {
+  const searchParams = useSearchParams();
+  const urlSearch = searchParams.get("search") ?? "";
+
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState(urlSearch);
   const [loading, setLoading] = useState(true);
+
+  // Sync search state when URL param changes (e.g. navigated from navbar)
+  useEffect(() => {
+    setSearchQuery(urlSearch);
+  }, [urlSearch]);
 
   useEffect(() => {
     getCategories()
@@ -19,11 +29,17 @@ export default function Products() {
 
   useEffect(() => {
     setLoading(true);
-    getProducts({ category: activeCategory })
+    getProducts({ category: activeCategory, search: searchQuery || undefined })
       .then(setProducts)
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));
-  }, [activeCategory]);
+  }, [activeCategory, searchQuery]);
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    // Remove ?search= from the URL without a full navigation
+    window.history.replaceState(null, "", "/products");
+  };
 
   const isEmpty = !loading && products.length === 0;
 
@@ -33,8 +49,25 @@ export default function Products() {
 
         <div className="flex flex-col space-y-8 mb-16">
           <h2 className="text-4xl md:text-6xl font-light tracking-tighter text-foreground uppercase text-center">
-            Shop The <span className="font-medium italic">Collection</span>
+            {searchQuery
+              ? <>Results for <span className="font-medium italic">&ldquo;{searchQuery}&rdquo;</span></>
+              : <>Shop The <span className="font-medium italic">Collection</span></>
+            }
           </h2>
+
+          {/* Active search pill */}
+          {searchQuery && (
+            <div className="flex justify-center">
+              <button
+                onClick={clearSearch}
+                className="inline-flex items-center gap-2 px-4 py-1.5 border border-foreground/20 text-[10px] font-medium tracking-[0.2em] uppercase text-foreground/60 hover:text-foreground hover:border-foreground transition-colors"
+              >
+                <X className="w-3 h-3" strokeWidth={2} />
+                Clear search: {searchQuery}
+              </button>
+            </div>
+          )}
+
           <div className="flex justify-center space-x-2 md:space-x-8 overflow-x-auto no-scrollbar w-full pb-2">
             {categories.map((cat, i) => (
               <button
@@ -78,16 +111,33 @@ export default function Products() {
                 <p className="text-[10px] tracking-[0.4em] uppercase text-foreground/40 mb-6">
                   OSW — Official StreetWear
                 </p>
-                <h3 className="text-5xl md:text-7xl font-light tracking-[0.15em] uppercase text-foreground mb-4">
-                  Coming
-                </h3>
-                <h3 className="text-5xl md:text-7xl font-medium italic tracking-[0.1em] uppercase text-foreground">
-                  Soon.
-                </h3>
-                <div className="w-12 h-px bg-foreground/30 mx-auto my-8" />
-                <p className="text-sm font-light text-foreground/50 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
-                  The collection is being prepared. Something worth waiting for.
-                </p>
+                {searchQuery ? (
+                  <>
+                    <h3 className="text-5xl md:text-7xl font-light tracking-[0.15em] uppercase text-foreground mb-4">
+                      No Results
+                    </h3>
+                    <h3 className="text-5xl md:text-7xl font-medium italic tracking-[0.1em] uppercase text-foreground">
+                      Found.
+                    </h3>
+                    <div className="w-12 h-px bg-foreground/30 mx-auto my-8" />
+                    <p className="text-sm font-light text-foreground/50 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
+                      No products matched &ldquo;{searchQuery}&rdquo;. Try a different term or browse the full collection.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-5xl md:text-7xl font-light tracking-[0.15em] uppercase text-foreground mb-4">
+                      Coming
+                    </h3>
+                    <h3 className="text-5xl md:text-7xl font-medium italic tracking-[0.1em] uppercase text-foreground">
+                      Soon.
+                    </h3>
+                    <div className="w-12 h-px bg-foreground/30 mx-auto my-8" />
+                    <p className="text-sm font-light text-foreground/50 tracking-widest uppercase max-w-xs mx-auto leading-relaxed">
+                      The collection is being prepared. Something worth waiting for.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
 
@@ -105,13 +155,23 @@ export default function Products() {
             </div>
 
             <div className="mt-16 flex flex-col sm:flex-row items-center gap-4">
-              <Link
-                href="/contact"
-                className="group inline-flex items-center gap-3 bg-foreground text-background text-[10px] font-medium tracking-[0.25em] uppercase px-8 py-4 hover:bg-foreground/90 transition-colors"
-              >
-                Get Notified
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
+              {searchQuery ? (
+                <button
+                  onClick={clearSearch}
+                  className="group inline-flex items-center gap-3 bg-foreground text-background text-[10px] font-medium tracking-[0.25em] uppercase px-8 py-4 hover:bg-foreground/90 transition-colors"
+                >
+                  Browse All Products
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
+                </button>
+              ) : (
+                <Link
+                  href="/contact"
+                  className="group inline-flex items-center gap-3 bg-foreground text-background text-[10px] font-medium tracking-[0.25em] uppercase px-8 py-4 hover:bg-foreground/90 transition-colors"
+                >
+                  Get Notified
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+              )}
               <Link
                 href="/"
                 className="text-[10px] font-medium tracking-[0.25em] uppercase text-foreground/50 hover:text-foreground transition-colors underline underline-offset-4"
