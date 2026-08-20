@@ -29,7 +29,7 @@ export default function Contact() {
         throw new Error(error || "Something went wrong");
       }
 
-      alert("Thanks for reaching out! Check your email to confirm.");
+      alert("Thanks for reaching out! check your email later.");
       setFormData({ name: "", email: "", type: "Collaboration", message: "" });
     } catch (err) {
       console.error(err);

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getProducts, getCategories, type Product } from "../lib/api";
 import { ArrowRight, X } from "lucide-react";
 
-export default function Products() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const urlSearch = searchParams.get("search") ?? "";
 
@@ -15,7 +15,6 @@ export default function Products() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState(urlSearch);
   const [loading, setLoading] = useState(true);
-
 
   useEffect(() => {
     setSearchQuery(urlSearch);
@@ -236,5 +235,19 @@ export default function Products() {
 
       </div>
     </section>
+  );
+}
+
+export default function Products() {
+  return (
+    <Suspense fallback={
+      <div className="w-full py-16 flex items-center justify-center">
+        <div className="animate-pulse text-xs tracking-widest uppercase text-foreground/40 font-light">
+          Loading Collection...
+        </div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }
