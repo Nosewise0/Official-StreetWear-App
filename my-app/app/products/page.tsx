@@ -16,7 +16,7 @@ export default function Products() {
   const [searchQuery, setSearchQuery] = useState(urlSearch);
   const [loading, setLoading] = useState(true);
 
-  // Sync search state when URL param changes (e.g. navigated from navbar)
+
   useEffect(() => {
     setSearchQuery(urlSearch);
   }, [urlSearch]);
@@ -37,7 +37,7 @@ export default function Products() {
 
   const clearSearch = () => {
     setSearchQuery("");
-    // Remove ?search= from the URL without a full navigation
+
     window.history.replaceState(null, "", "/products");
   };
 
@@ -55,7 +55,7 @@ export default function Products() {
             }
           </h2>
 
-          {/* Active search pill */}
+
           {searchQuery && (
             <div className="flex justify-center">
               <button
