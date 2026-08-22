@@ -306,7 +306,7 @@ export default function CheckoutPage() {
                         placeholder="name@example.com" />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
-                      <label className="text-xs font-bold tracking-[0.2em] uppercase text-foreground">Phone (optional)</label>
+                      <label className="text-xs font-bold tracking-[0.2em] uppercase text-foreground">Phone</label>
                       <input type="tel" value={shipping.phone} onChange={e => setShipping({ ...shipping, phone: e.target.value })}
                         className="w-full bg-transparent border-b border-border py-3 text-sm focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20 font-light"
                         placeholder="+63 917 123 4567" />
@@ -324,7 +324,7 @@ export default function CheckoutPage() {
                         placeholder="123 Rizal Street" />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
-                      <label className="text-xs font-bold tracking-[0.2em] uppercase text-foreground">Apartment, unit, etc. (optional)</label>
+                      <label className="text-xs font-bold tracking-[0.2em] uppercase text-foreground">Apartment, unit, etc.</label>
                       <input value={shipping.apartment} onChange={e => setShipping({ ...shipping, apartment: e.target.value })}
                         className="w-full bg-transparent border-b border-border py-3 text-sm focus:outline-none focus:border-foreground transition-colors placeholder:text-foreground/20 font-light"
                         placeholder="Unit 4B" />
