@@ -221,7 +221,7 @@ function ProductsContent() {
                       {product.name}
                     </h3>
                     <span className="text-sm font-light text-foreground whitespace-nowrap">
-                      ${product.price}
+                      ₱{product.price}
                     </span>
                   </div>
                   <p className="text-foreground/50 text-[10px] font-medium uppercase tracking-[0.2em]">

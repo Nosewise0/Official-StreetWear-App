@@ -35,7 +35,7 @@ const sections = [
       },
       {
         subtitle: "Pricing & availability",
-        body: "All prices are displayed in USD unless otherwise stated. We reserve the right to change prices at any time without prior notice. Products are subject to availability and we do not guarantee that items will remain in stock. If a product you ordered becomes unavailable, we will notify you and issue a full refund.",
+        body: "All prices are displayed in Philippine pesos (₱) unless otherwise stated. We reserve the right to change prices at any time without prior notice. Products are subject to availability and we do not guarantee that items will remain in stock. If a product you ordered becomes unavailable, we will notify you and issue a full refund.",
       },
       {
         subtitle: "Payment",

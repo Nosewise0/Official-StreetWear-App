@@ -50,7 +50,7 @@ const FAQS: Record<string, { q: string; a: string }[]> = {
     },
     {
       q: "How long does delivery take?",
-      a: "Domestic (US): 2–5 business days standard, 1–2 days express. International: 5–14 business days depending on customs. All orders over $150 qualify for free standard worldwide shipping.",
+      a: "Domestic (Philippines): 2–5 business days standard, 1–2 days express. International: 5–14 business days depending on customs. All orders over ₱150 qualify for free standard worldwide shipping.",
     },
     {
       q: "Will I be charged customs and import duties?",

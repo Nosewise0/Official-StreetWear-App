@@ -186,7 +186,7 @@ export default function AdminProducts() {
                   </td>
                   <td className="px-5 py-4 font-medium">{p.name}</td>
                   <td className="px-5 py-4 text-foreground/60 text-xs tracking-widest uppercase">{p.category}</td>
-                  <td className="px-5 py-4">${p.price}</td>
+                  <td className="px-5 py-4">₱{p.price}</td>
                   <td className="px-5 py-4">
                     <span className={`text-xs px-2 py-1 ${p.stock > 0 ? "bg-muted text-foreground" : "bg-foreground text-background"}`}>
                       {p.stock}
@@ -232,7 +232,7 @@ export default function AdminProducts() {
                 [
                   { key: "name", label: "Name", placeholder: "e.g. OSW Oversized Tee" },
                   { key: "category", label: "Category", placeholder: "e.g. T-Shirts" },
-                  { key: "price", label: "Price (USD)", placeholder: "e.g. 49.99", type: "number" },
+                  { key: "price", label: "Price (PHP)", placeholder: "e.g. 2499.00", type: "number" },
                   { key: "stock", label: "Stock", placeholder: "e.g. 100", type: "number" },
                   { key: "image", label: "Image URL", placeholder: "e.g. https://images.unsplash.com/..." },
                   { key: "sizes", label: "Sizes (comma-separated)", placeholder: "S, M, L, XL" },

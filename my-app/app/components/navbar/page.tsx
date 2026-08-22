@@ -448,7 +448,7 @@ export default function Navbar() {
                               {product.category}
                             </p>
                           </div>
-                          <span className="text-sm font-light text-foreground shrink-0">${product.price}</span>
+                          <span className="text-sm font-light text-foreground shrink-0">₱{product.price}</span>
                         </Link>
                       ))
                     )}

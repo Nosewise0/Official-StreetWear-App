@@ -311,7 +311,7 @@ export default function ProductDetail() {
                 {product.name}
               </h1>
               <p className="text-2xl font-light text-foreground">
-                ${product.price.toFixed(2)}
+                ₱{product.price.toFixed(2)}
               </p>
             </div>
 
@@ -513,7 +513,7 @@ export default function ProductDetail() {
 
               <DetailAccordion title="Shipping & Returns">
                 <p>
-                  Free standard shipping on all orders over $150. Express available at checkout.
+                  Free standard shipping on all orders over ₱150. Express available at checkout.
                   Domestic orders arrive in 2–5 business days. International in 5–14 business days.
                 </p>
                 <p>
@@ -562,7 +562,7 @@ export default function ProductDetail() {
                         {rel.name}
                       </h3>
                       <span className="text-sm font-light text-foreground whitespace-nowrap">
-                        ${rel.price}
+                        ₱{rel.price}
                       </span>
                     </div>
                     <p className="text-foreground/50 text-[10px] font-medium uppercase tracking-[0.2em]">

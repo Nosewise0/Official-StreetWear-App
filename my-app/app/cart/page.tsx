@@ -176,7 +176,7 @@ export default function CartPage() {
                       </span>
                     </div>
                     <p className="text-sm font-light text-foreground/70 md:hidden pt-1">
-                      ${item.price.toFixed(2)} each
+                      ₱{item.price.toFixed(2)} each
                     </p>
                   </div>
 
@@ -201,7 +201,7 @@ export default function CartPage() {
                       </button>
                     </div>
                     <span className="text-sm font-medium text-foreground">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ₱{(item.price * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -230,7 +230,7 @@ export default function CartPage() {
 
                 <div className="hidden md:flex items-center justify-end gap-4 min-w-[80px]">
                   <span className="text-sm font-medium text-foreground tabular-nums">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ₱{(item.price * item.quantity).toFixed(2)}
                   </span>
                   <button
                     onClick={() => removeItem(item.id, item.size, item.color)}
@@ -268,7 +268,7 @@ export default function CartPage() {
               {toFreeShipping > 0 ? (
                 <p className="text-xs font-light text-foreground/70 leading-relaxed">
                   Add{" "}
-                  <span className="font-medium text-foreground">${toFreeShipping.toFixed(2)}</span>
+                  <span className="font-medium text-foreground">₱{toFreeShipping.toFixed(2)}</span>
                   {" "}more for free worldwide shipping
                 </p>
               ) : (
@@ -295,7 +295,7 @@ export default function CartPage() {
                     Subtotal ({totalItems} {totalItems === 1 ? "item" : "items"})
                   </span>
                   <span className="text-sm font-light text-foreground tabular-nums">
-                    ${totalPrice.toFixed(2)}
+                    ₱{totalPrice.toFixed(2)}
                   </span>
                 </div>
 
@@ -327,7 +327,7 @@ export default function CartPage() {
                   Estimated Total
                 </span>
                 <span className="text-xl font-light text-foreground tabular-nums">
-                  ${totalPrice.toFixed(2)}
+                  ₱{totalPrice.toFixed(2)}
                 </span>
               </div>
             </div>

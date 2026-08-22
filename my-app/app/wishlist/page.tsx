@@ -170,7 +170,7 @@ export default function WishlistPage() {
                       {item.category}
                     </p>
                     <p className="text-sm font-light text-foreground pt-1">
-                      ${item.price.toFixed(2)}
+                      ₱{item.price.toFixed(2)}
                     </p>
                   </div>
 
@@ -237,7 +237,7 @@ export default function WishlistPage() {
                   {totalItems} {totalItems === 1 ? "piece" : "pieces"}
                 </span>
                 <span className="text-xl font-light text-foreground tabular-nums">
-                  ${totalValue.toFixed(2)}
+                  ₱{totalValue.toFixed(2)}
                 </span>
               </div>
               <p className="text-[10px] font-light text-foreground/50 leading-relaxed">
@@ -256,7 +256,7 @@ export default function WishlistPage() {
                     {item.name}
                   </span>
                   <span className="text-xs font-light text-foreground tabular-nums shrink-0">
-                    ${item.price.toFixed(2)}
+                    ₱{item.price.toFixed(2)}
                   </span>
                 </div>
               ))}
@@ -265,7 +265,7 @@ export default function WishlistPage() {
                   Total Value
                 </span>
                 <span className="text-xl font-light text-foreground tabular-nums">
-                  ${totalValue.toFixed(2)}
+                  ₱{totalValue.toFixed(2)}
                 </span>
               </div>
             </div>

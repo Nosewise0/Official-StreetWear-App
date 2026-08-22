@@ -15,13 +15,13 @@ export default function Home() {
 
       <div className="w-full bg-foreground text-background py-3 overflow-hidden relative flex">
         <div className="animate-[marquee_20s_linear_infinite] whitespace-nowrap flex items-center gap-8 text-xs font-bold tracking-[0.2em] uppercase">
-          <span>Free Worldwide Shipping Over $150</span>
+          <span>Free Worldwide Shipping Over ₱150</span>
           <span>•</span>
           <span>New Collection Just Dropped</span>
           <span>•</span>
           <span>Limited Editions</span>
           <span>•</span>
-          <span>Free Worldwide Shipping Over $150</span>
+          <span>Free Worldwide Shipping Over ₱150</span>
           <span>•</span>
           <span>New Collection Just Dropped</span>
           <span>•</span>

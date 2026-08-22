@@ -17,8 +17,6 @@ import {
   ArrowRight,
   Mail,
   Calendar,
-  ExternalLink,
-  Edit3
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -26,39 +24,61 @@ import { useWishlist } from "../context/WishlistContext";
 
 type ProfileTab = "overview" | "orders" | "addresses" | "settings";
 
-const MOCK_ORDERS = [
-  {
-    id: "OSW-89210",
-    date: "August 10, 2026",
-    status: "Delivered",
-    items: [
-      { name: "Heavyweight Boxy Hoodie", size: "L", color: "Black", price: 145, qty: 1 },
-      { name: "Cargo Utility Pants", size: "M", color: "Olive", price: 180, qty: 1 }
-    ],
-    total: 325.00,
-    tracking: "DHL-982187391"
-  },
-  {
-    id: "OSW-84192",
-    date: "July 24, 2026",
-    status: "In Transit",
-    items: [
-      { name: "Oversized Vintage Tee", size: "L", color: "Washed Slate", price: 75, qty: 2 }
-    ],
-    total: 150.00,
-    tracking: "FedEx-77123910"
-  },
-  {
-    id: "OSW-79102",
-    date: "June 15, 2026",
-    status: "Delivered",
-    items: [
-      { name: "Distressed Denim Jacket", size: "XL", color: "Raw Indigo", price: 260, qty: 1 }
-    ],
-    total: 260.00,
-    tracking: "UPS-1Z9999999999"
-  }
-];
+interface OrderItem {
+  id?: number;
+  name: string;
+  price: number;
+  quantity: number;
+  size: string;
+  color: string;
+}
+
+interface ShippingAddress {
+  address?: string;
+  apartment?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  country?: string;
+}
+
+interface CustomerOrder {
+  id: string;
+  created_at: string;
+  status: "pending" | "verified" | "rejected";
+  total: number;
+  items: OrderItem[];
+  shipping_address: ShippingAddress;
+  admin_notes: string | null;
+}
+
+const STATUS_STYLES: Record<CustomerOrder["status"], string> = {
+  pending: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+  verified: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+  rejected: "bg-red-500/10 text-red-600 border-red-500/20",
+};
+
+const STATUS_LABELS: Record<CustomerOrder["status"], string> = {
+  pending: "Payment Pending",
+  verified: "Verified",
+  rejected: "Rejected",
+};
+
+function formatOrderDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-PH", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function shortOrderId(id: string) {
+  return id.replace(/-/g, "").slice(0, 8).toUpperCase();
+}
+
+function itemQty(item: OrderItem) {
+  return item.quantity ?? 0;
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -77,11 +97,45 @@ export default function ProfilePage() {
 
   const [marketingEmail, setMarketingEmail] = useState(true);
   const [dropAlerts, setDropAlerts] = useState(true);
+  const [orders, setOrders] = useState<CustomerOrder[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersError, setOrdersError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user?.user_metadata?.full_name) {
       setFullName(String(user.user_metadata.full_name));
     }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    let cancelled = false;
+    setOrdersLoading(true);
+    setOrdersError(null);
+
+    fetch("/api/orders")
+      .then(async (res) => {
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error ?? "Failed to load orders.");
+        return json.data as CustomerOrder[];
+      })
+      .then((data) => {
+        if (!cancelled) setOrders(data ?? []);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setOrders([]);
+          setOrdersError(err instanceof Error ? err.message : "Failed to load orders.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setOrdersLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   if (authLoading) {
@@ -176,6 +230,9 @@ export default function ProfilePage() {
     router.push("/");
   };
 
+  const latestOrder = orders[0];
+  const latestAddress = latestOrder?.shipping_address;
+
   return (
     <div className="min-h-[calc(100vh-5rem)] bg-background text-foreground">
 
@@ -211,11 +268,6 @@ export default function ProfilePage() {
                 {getInitials(userDisplayName)}
               </div>
               <div className="space-y-1">
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold tracking-[0.3em] uppercase bg-background/20 text-background px-2.5 py-0.5 border border-background/20">
-                    Tier 01 · VIP Member
-                  </span>
-                </div>
                 <h1 className="text-3xl md:text-5xl font-light tracking-tight uppercase leading-tight">
                   {userDisplayName}
                 </h1>
@@ -225,7 +277,10 @@ export default function ProfilePage() {
                   </span>
                   <span>•</span>
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 opacity-60" /> Joined 2026
+                    <Calendar className="w-3.5 h-3.5 opacity-60" /> Joined{" "}
+                    {user.created_at
+                      ? new Date(user.created_at).toLocaleDateString("en-PH", { month: "short", year: "numeric" })
+                      : "—"}
                   </span>
                 </div>
               </div>
@@ -250,7 +305,7 @@ export default function ProfilePage() {
           <nav className="flex flex-row lg:flex-col border-b lg:border-b-0 lg:border-r border-border pb-4 lg:pb-0 lg:pr-8 gap-2 overflow-x-auto no-scrollbar">
             {[
               { id: "overview", label: "Overview", icon: UserIcon },
-              { id: "orders", label: "Order History", icon: Package, badge: MOCK_ORDERS.length },
+              { id: "orders", label: "Order History", icon: Package, badge: orders.length },
               { id: "addresses", label: "Addresses", icon: MapPin },
               { id: "settings", label: "Settings", icon: Settings },
             ].map(({ id, label, icon: Icon, badge }) => (
@@ -304,7 +359,7 @@ export default function ProfilePage() {
                       <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Total Orders</span>
                       <Package className="w-4 h-4" strokeWidth={1.5} />
                     </div>
-                    <p className="text-3xl font-light tracking-tight">{MOCK_ORDERS.length}</p>
+                    <p className="text-3xl font-light tracking-tight">{ordersLoading ? "—" : orders.length}</p>
                     <button onClick={() => setActiveTab("orders")} className="text-[10px] font-medium tracking-[0.2em] uppercase underline underline-offset-4 hover:text-foreground/60 transition-colors">
                       View History →
                     </button>
@@ -334,37 +389,61 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="border border-border space-y-0">
-                  <div className="p-6 border-b border-border flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xs font-bold tracking-[0.2em] uppercase">Recent Order</h3>
-                      <p className="text-[10px] font-light text-foreground/60">Order #{MOCK_ORDERS[0].id}</p>
+                  {ordersLoading ? (
+                    <div className="p-10 flex items-center justify-center">
+                      <Loader2 className="w-5 h-5 animate-spin text-foreground/40" />
                     </div>
-                    <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-[10px] font-bold tracking-widest uppercase">
-                      {MOCK_ORDERS[0].status}
-                    </span>
-                  </div>
-                  <div className="p-6 space-y-4">
-                    <div className="flex items-center justify-between text-xs font-light text-foreground/70">
-                      <span>Date: {MOCK_ORDERS[0].date}</span>
-                      <span className="font-medium text-foreground">${MOCK_ORDERS[0].total.toFixed(2)}</span>
+                  ) : ordersError ? (
+                    <div className="p-10 text-center">
+                      <p className="text-xs tracking-[0.2em] uppercase text-foreground/40">{ordersError}</p>
                     </div>
-                    <div className="space-y-2 pt-2 border-t border-border">
-                      {MOCK_ORDERS[0].items.map((item, idx) => (
-                        <div key={idx} className="flex justify-between items-center text-xs">
-                          <span className="font-medium uppercase">{item.name} ({item.size} / {item.color})</span>
-                          <span className="text-foreground/60">x{item.qty}</span>
+                  ) : !latestOrder ? (
+                    <div className="p-10 text-center space-y-4">
+                      <Package className="w-8 h-8 text-foreground/20 mx-auto" />
+                      <p className="text-xs tracking-[0.2em] uppercase text-foreground/40">No orders yet</p>
+                      <Link href="/products" className="inline-flex items-center gap-2 text-[10px] font-medium tracking-[0.2em] uppercase underline underline-offset-4">
+                        Shop the collection <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="p-6 border-b border-border flex items-center justify-between">
+                        <div>
+                          <h3 className="text-xs font-bold tracking-[0.2em] uppercase">Recent Order</h3>
+                          <p className="text-[10px] font-light text-foreground/60">Order #{shortOrderId(latestOrder.id)}</p>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="px-6 py-4 bg-muted border-t border-border flex justify-end">
-                    <button
-                      onClick={() => setActiveTab("orders")}
-                      className="text-xs font-medium tracking-[0.2em] uppercase flex items-center gap-2 hover:text-foreground/60 transition-colors"
-                    >
-                      View All Orders <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                        <span className={`px-3 py-1 border text-[10px] font-bold tracking-widest uppercase ${STATUS_STYLES[latestOrder.status] ?? STATUS_STYLES.pending}`}>
+                          {STATUS_LABELS[latestOrder.status] ?? latestOrder.status}
+                        </span>
+                      </div>
+                      <div className="p-6 space-y-4">
+                        <div className="flex items-center justify-between text-xs font-light text-foreground/70">
+                          <span>Date: {formatOrderDate(latestOrder.created_at)}</span>
+                          <span className="font-medium text-foreground">₱{latestOrder.total.toFixed(2)}</span>
+                        </div>
+                        <div className="space-y-2 pt-2 border-t border-border">
+                          {latestOrder.items.length === 0 ? (
+                            <p className="text-xs text-foreground/40">No products on this order</p>
+                          ) : (
+                            latestOrder.items.map((item, idx) => (
+                              <div key={idx} className="flex justify-between items-center text-xs">
+                                <span className="font-medium uppercase">{item.name} ({item.size} / {item.color})</span>
+                                <span className="text-foreground/60">x{itemQty(item)}</span>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                      <div className="px-6 py-4 bg-muted border-t border-border flex justify-end">
+                        <button
+                          onClick={() => setActiveTab("orders")}
+                          className="text-xs font-medium tracking-[0.2em] uppercase flex items-center gap-2 hover:text-foreground/60 transition-colors"
+                        >
+                          View All Orders <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
 
               </div>
@@ -379,101 +458,119 @@ export default function ProfilePage() {
                   </p>
                 </div>
 
-                <div className="space-y-6">
-                  {MOCK_ORDERS.map((order) => (
-                    <div key={order.id} className="border border-border">
-                      <div className="p-6 border-b border-border bg-muted flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold tracking-widest uppercase">Order #{order.id}</span>
-                            <span className={`px-2.5 py-0.5 text-[10px] font-bold tracking-widest uppercase border ${
-                              order.status === "Delivered"
-                                ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
-                                : "bg-amber-500/10 text-amber-600 border-amber-500/20"
-                            }`}>
-                              {order.status}
-                            </span>
-                          </div>
-                          <p className="text-[10px] font-light text-foreground/60">Placed on {order.date}</p>
-                        </div>
-
-                        <div className="text-left sm:text-right">
-                          <p className="text-xs font-bold tracking-wider uppercase">Total</p>
-                          <p className="text-lg font-light text-foreground">${order.total.toFixed(2)}</p>
-                        </div>
-                      </div>
-
-                      <div className="p-6 space-y-4">
-                        <div className="space-y-3">
-                          {order.items.map((item, idx) => (
-                            <div key={idx} className="flex justify-between items-center text-xs pb-3 border-b border-border last:border-0 last:pb-0">
-                              <div>
-                                <p className="font-medium uppercase tracking-wider">{item.name}</p>
-                                <p className="text-[10px] font-light text-foreground/60 uppercase">Size: {item.size} · Color: {item.color}</p>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-light">${item.price.toFixed(2)}</p>
-                                <p className="text-[10px] text-foreground/50">Qty: {item.qty}</p>
-                              </div>
+                {ordersLoading ? (
+                  <div className="border border-border p-16 flex items-center justify-center">
+                    <Loader2 className="w-6 h-6 animate-spin text-foreground/40" />
+                  </div>
+                ) : ordersError ? (
+                  <div className="border border-border p-16 text-center">
+                    <p className="text-xs tracking-[0.2em] uppercase text-foreground/40">{ordersError}</p>
+                  </div>
+                ) : orders.length === 0 ? (
+                  <div className="border border-border p-16 text-center space-y-4">
+                    <Package className="w-10 h-10 text-foreground/20 mx-auto" />
+                    <p className="text-xs tracking-[0.2em] uppercase text-foreground/40">No orders yet</p>
+                    <Link
+                      href="/products"
+                      className="inline-flex items-center gap-2 text-[10px] font-medium tracking-[0.2em] uppercase underline underline-offset-4"
+                    >
+                      Shop the collection <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {orders.map((order) => (
+                      <div key={order.id} className="border border-border">
+                        <div className="p-6 border-b border-border bg-muted flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm font-bold tracking-widest uppercase">Order #{shortOrderId(order.id)}</span>
+                              <span className={`px-2.5 py-0.5 text-[10px] font-bold tracking-widest uppercase border ${STATUS_STYLES[order.status] ?? STATUS_STYLES.pending}`}>
+                                {STATUS_LABELS[order.status] ?? order.status}
+                              </span>
                             </div>
-                          ))}
+                            <p className="text-[10px] font-light text-foreground/60">Placed on {formatOrderDate(order.created_at)}</p>
+                          </div>
+
+                          <div className="text-left sm:text-right">
+                            <p className="text-xs font-bold tracking-wider uppercase">Total</p>
+                            <p className="text-lg font-light text-foreground">₱{order.total.toFixed(2)}</p>
+                          </div>
+                        </div>
+
+                        <div className="p-6 space-y-4">
+                          <div className="space-y-3">
+                            {order.items.length === 0 ? (
+                              <p className="text-xs text-foreground/40">No products on this order</p>
+                            ) : (
+                              order.items.map((item, idx) => (
+                                <div key={idx} className="flex justify-between items-center text-xs pb-3 border-b border-border last:border-0 last:pb-0">
+                                  <div>
+                                    <p className="font-medium uppercase tracking-wider">{item.name}</p>
+                                    <p className="text-[10px] font-light text-foreground/60 uppercase">Size: {item.size} · Color: {item.color}</p>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="font-light">₱{Number(item.price).toFixed(2)}</p>
+                                    <p className="text-[10px] text-foreground/50">Qty: {itemQty(item)}</p>
+                                  </div>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="px-6 py-4 border-t border-border space-y-2 text-xs">
+                          <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-foreground/40">Ship to</p>
+                          <p className="text-foreground/70 font-light leading-relaxed">
+                            {order.shipping_address?.address}
+                            {order.shipping_address?.apartment ? `, ${order.shipping_address.apartment}` : ""}
+                            {order.shipping_address?.city ? `, ${order.shipping_address.city}` : ""}
+                            {order.shipping_address?.state ? `, ${order.shipping_address.state}` : ""}{" "}
+                            {order.shipping_address?.zip} {order.shipping_address?.country}
+                          </p>
+                          {order.admin_notes && (
+                            <p className="text-[10px] text-foreground/50 pt-1">Note: {order.admin_notes}</p>
+                          )}
                         </div>
                       </div>
-
-                      <div className="px-6 py-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
-                        <span className="text-foreground/60 text-[10px] uppercase tracking-widest">
-                          Tracking: <span className="font-medium text-foreground">{order.tracking}</span>
-                        </span>
-                        <button
-                          onClick={() => alert(`Tracking info for ${order.tracking}`)}
-                          className="inline-flex items-center gap-2 border border-border px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-foreground hover:text-background transition-colors"
-                        >
-                          <ExternalLink className="w-3 h-3" /> Track Shipment
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
             {activeTab === "addresses" && (
               <div className="space-y-8">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <h2 className="text-2xl md:text-3xl font-light tracking-tight uppercase">Saved Addresses</h2>
-                    <p className="text-xs font-light text-foreground/60">
-                      Manage default shipping addresses for fast checkout.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => alert("Address management modal triggered.")}
-                    className="border border-border px-4 py-3 text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-foreground hover:text-background transition-colors"
-                  >
-                    + Add New Address
-                  </button>
+                <div className="space-y-1">
+                  <h2 className="text-2xl md:text-3xl font-light tracking-tight uppercase">Saved Addresses</h2>
+                  <p className="text-xs font-light text-foreground/60">
+                    Shipping address from your most recent order.
+                  </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="border border-foreground p-6 space-y-4 relative">
-                    <span className="absolute top-4 right-4 text-[10px] font-bold tracking-widest uppercase bg-foreground text-background px-2 py-1">
-                      Default Shipping
-                    </span>
-                    <div className="space-y-1">
-                      <p className="text-xs font-bold tracking-wider uppercase">{userDisplayName}</p>
-                      <p className="text-xs font-light text-foreground/70 leading-relaxed">
-                        123 Culture Way, Apt 4B<br />
-                        Los Angeles, CA 90015<br />
-                        United States
-                      </p>
-                    </div>
-                    <div className="pt-4 border-t border-border flex gap-4 text-[10px] font-bold tracking-[0.2em] uppercase">
-                      <button className="hover:underline flex items-center gap-1">
-                        <Edit3 className="w-3 h-3" /> Edit
-                      </button>
+                {!latestAddress?.address ? (
+                  <div className="border border-border p-12 text-center space-y-3">
+                    <MapPin className="w-8 h-8 text-foreground/20 mx-auto" />
+                    <p className="text-xs tracking-[0.2em] uppercase text-foreground/40">No shipping address yet</p>
+                    <p className="text-[10px] font-light text-foreground/50">Place an order to save your shipping details here.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="border border-foreground p-6 space-y-4 relative">
+                      <span className="absolute top-4 right-4 text-[10px] font-bold tracking-widest uppercase bg-foreground text-background px-2 py-1">
+                        Latest Order
+                      </span>
+                      <div className="space-y-1">
+                        <p className="text-xs font-bold tracking-wider uppercase">{userDisplayName}</p>
+                        <p className="text-xs font-light text-foreground/70 leading-relaxed">
+                          {latestAddress.address}{latestAddress.apartment ? `, ${latestAddress.apartment}` : ""}<br />
+                          {latestAddress.city}{latestAddress.state ? `, ${latestAddress.state}` : ""} {latestAddress.zip}<br />
+                          {latestAddress.country}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
 

@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: data.user.id,
         email: data.user.email,
+        created_at: data.user.created_at,
         user_metadata: data.user.user_metadata,
       },
     });

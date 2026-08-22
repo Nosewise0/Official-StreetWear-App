@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 interface User {
   id: string;
   email: string;
+  created_at?: string;
   user_metadata?: Record<string, unknown>;
 }
 
