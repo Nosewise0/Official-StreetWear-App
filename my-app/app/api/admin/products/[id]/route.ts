@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../lib/supabase/supaBaseAdmin";
 import { createSupabaseServerClient } from "../../../../lib/supabaseServer";
 
-const ADMIN_EMAIL = "admin1@gmail.com";
+const ADMIN_EMAIL = "bilat2@gmail.com";
 
 async function checkAdmin() {
   const supabase = await createSupabaseServerClient();

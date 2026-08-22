@@ -15,7 +15,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 
-const ADMIN_EMAILS = ["admin1@gmail.com", "nonsaker021@gmail.com"];
+const ADMIN_EMAILS = ["admin1@gmail.com", "nonsaker021@gmail.com", "bilat2@gmail.com"];
 
 const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
