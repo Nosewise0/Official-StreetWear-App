@@ -29,8 +29,14 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Refresh the session — must not use getSession() here, use getUser() instead
-  await supabase.auth.getUser();
+  // Refresh the session — wrapped in try/catch so navigation is never blocked if network/Supabase fails
+  try {
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
+      await supabase.auth.getUser();
+    }
+  } catch {
+    // Gracefully continue without blocking page navigation
+  }
 
   return supabaseResponse;
 }

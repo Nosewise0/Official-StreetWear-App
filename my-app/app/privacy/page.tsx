@@ -121,7 +121,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-[calc(100vh-5rem)] bg-background text-foreground">
 
-      {/* Hero */}
+     
       <div className="w-full bg-foreground text-background py-20 md:py-28 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -151,14 +151,14 @@ export default function PrivacyPage() {
         </div>
       </div>
 
-      {/* Intro */}
+     
       <div className="container mx-auto px-6 max-w-4xl py-16 md:py-20">
         <p className="text-base font-light text-foreground/70 leading-relaxed border-l-2 border-foreground pl-6">
           At Official StreetWear (OSW), your privacy is not an afterthought — it is a commitment. This policy explains what personal information we collect, why we collect it, how we use and protect it, and the choices you have. We believe in full transparency, plain language, and earning your trust every day.
         </p>
       </div>
 
-      {/* Sections */}
+      
       <div className="container mx-auto px-6 max-w-4xl pb-24 space-y-0">
         {sections.map((section, si) => {
           const Icon = section.icon;
@@ -189,7 +189,7 @@ export default function PrivacyPage() {
         })}
       </div>
 
-      {/* Footer CTA */}
+     
       <div className="border-t border-border">
         <div className="container mx-auto px-6 max-w-4xl py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-1">

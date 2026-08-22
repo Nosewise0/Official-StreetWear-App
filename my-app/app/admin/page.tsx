@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Package, Mail, Users, ArrowRight, TrendingUp } from "lucide-react";
+import { Package, Mail, Users, ArrowRight, TrendingUp, ShoppingBag } from "lucide-react";
 
 interface Stats {
   products: number;
   contacts: number;
   users: number;
+  orders: number;
 }
 
 interface ContactSubmission {
@@ -58,6 +59,13 @@ export default function AdminOverview() {
       icon: Users,
       href: "/admin",
       description: "Signed up accounts",
+    },
+    {
+      label: "Orders",
+      value: stats?.orders ?? 0,
+      icon: ShoppingBag,
+      href: "/admin/orders",
+      description: "GCash orders placed",
     },
     {
       label: "Store Status",

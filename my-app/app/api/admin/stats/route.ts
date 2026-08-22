@@ -12,15 +12,17 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [products, contacts, users] = await Promise.all([
+  const [products, contacts, users, orders] = await Promise.all([
     supabaseAdmin.from("products").select("*", { count: "exact", head: true }),
     supabaseAdmin.from("contact_submissions").select("*", { count: "exact", head: true }),
     supabaseAdmin.auth.admin.listUsers(),
+    supabaseAdmin.from("orders").select("*", { count: "exact", head: true }),
   ]);
 
   return NextResponse.json({
     products: products.count ?? 0,
     contacts: contacts.count ?? 0,
     users: users.data?.users?.length ?? 0,
+    orders: orders.count ?? 0,
   });
 }

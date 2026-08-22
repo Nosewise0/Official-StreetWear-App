@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   ShieldAlert,
+  ShoppingBag,
 } from "lucide-react";
 
 const ADMIN_EMAILS = ["admin1@gmail.com", "nonsaker021@gmail.com"];
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/contacts", label: "Contacts", icon: Mail },
+  { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
