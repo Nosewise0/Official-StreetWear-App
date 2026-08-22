@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ADMIN_EMAILS } from "../../../../lib/admin";
 import { supabaseAdmin } from "../../../../lib/supabase/supaBaseAdmin";
 import { createSupabaseServerClient } from "../../../../lib/supabaseServer";
-
-const ADMIN_EMAIL = "bilat2@gmail.com";
 
 async function checkAdmin() {
   const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  return user?.email === ADMIN_EMAIL ? user : null;
+  return user?.email && ADMIN_EMAILS.includes(user.email) ? user : null;
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

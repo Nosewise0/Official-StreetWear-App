@@ -175,10 +175,10 @@ function OrderRow({ order, onUpdate }: { order: Order; onUpdate: () => void }) {
               <div className="space-y-2">
                 <p className="text-[9px] tracking-[0.25em] uppercase text-foreground/40 font-medium">Shipping Address</p>
                 <p className="text-xs font-light leading-relaxed text-foreground/80">
-                  {order.shipping_address.address}
-                  {order.shipping_address.apartment ? `, ${order.shipping_address.apartment}` : ""}<br />
-                  {order.shipping_address.city}, {order.shipping_address.state} {order.shipping_address.zip}<br />
-                  {order.shipping_address.country}
+                  {order.shipping_address?.address}
+                  {order.shipping_address?.apartment ? `, ${order.shipping_address.apartment}` : ""}<br />
+                  {order.shipping_address?.city}, {order.shipping_address?.state} {order.shipping_address?.zip}<br />
+                  {order.shipping_address?.country}
                 </p>
               </div>
 
@@ -207,7 +207,10 @@ function OrderRow({ order, onUpdate }: { order: Order; onUpdate: () => void }) {
             <div className="space-y-3">
               <p className="text-[9px] tracking-[0.25em] uppercase text-foreground/40 font-medium">Order Items</p>
               <div className="space-y-2">
-                {order.items.map((item, idx) => (
+                {order.items.length === 0 ? (
+                  <p className="text-xs text-foreground/40 font-light">No products on this order</p>
+                ) : (
+                  order.items.map((item, idx) => (
                   <div key={idx} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wider">{item.name}</p>
@@ -215,7 +218,8 @@ function OrderRow({ order, onUpdate }: { order: Order; onUpdate: () => void }) {
                     </div>
                     <p className="text-sm font-light tabular-nums">₱{(item.price * item.quantity).toFixed(2)}</p>
                   </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
 
@@ -302,19 +306,28 @@ function OrderRow({ order, onUpdate }: { order: Order; onUpdate: () => void }) {
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<StatusFilter>("all");
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchOrders = useCallback(async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
     else setLoading(true);
+    setError(null);
 
     try {
       const res = await fetch("/api/admin/orders");
       const json = await res.json();
+      if (!res.ok) {
+        setOrders([]);
+        setError(json.error ?? "Failed to load orders.");
+        return;
+      }
       setOrders(json.data ?? []);
     } catch (err) {
       console.error(err);
+      setOrders([]);
+      setError("Failed to load orders.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -369,11 +382,10 @@ export default function AdminOrdersPage() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-4 py-3 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors border-b-2 -mb-px ${
-              filter === s
-                ? "border-foreground text-foreground"
-                : "border-transparent text-foreground/40 hover:text-foreground"
-            }`}
+            className={`px-4 py-3 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors border-b-2 -mb-px ${filter === s
+              ? "border-foreground text-foreground"
+              : "border-transparent text-foreground/40 hover:text-foreground"
+              }`}
           >
             {s === "all" ? "All" : s} {!loading && <span className="ml-1 opacity-60">({counts[s]})</span>}
           </button>
@@ -396,6 +408,11 @@ export default function AdminOrdersPage() {
               </div>
             </div>
           ))}
+        </div>
+      ) : error ? (
+        <div className="border border-border p-16 text-center space-y-4">
+          <ShoppingBag className="w-10 h-10 text-foreground/20 mx-auto" />
+          <p className="text-xs tracking-[0.2em] uppercase text-foreground/40">{error}</p>
         </div>
       ) : filtered.length === 0 ? (
         <div className="border border-border p-16 text-center space-y-4">

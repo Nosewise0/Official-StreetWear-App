@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ADMIN_EMAILS } from "../../../lib/admin";
 import { supabaseAdmin } from "../../../lib/supabase/supaBaseAdmin";
 import { createSupabaseServerClient } from "../../../lib/supabaseServer";
 
-const ADMIN_EMAILS = ["admin1@gmail.com", "nonsaker021@gmail.com"];
 const BUCKET = "receipts";
 const SIGNED_URL_EXPIRY = 60 * 60; // 1 hour
 
@@ -29,18 +29,57 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to fetch orders." }, { status: 500 });
   }
 
-  // Generate signed URLs for each receipt
   const ordersWithUrls = await Promise.all(
     (orders ?? []).map(async (order) => {
-      if (!order.receipt_path) return { ...order, receiptUrl: null };
-      const { data: signedData } = await supabaseAdmin.storage
-        .from(BUCKET)
-        .createSignedUrl(order.receipt_path, SIGNED_URL_EXPIRY);
-      return { ...order, receiptUrl: signedData?.signedUrl ?? null };
+      let receiptUrl: string | null = null;
+      if (order.receipt_path) {
+        const { data: signedData } = await supabaseAdmin.storage
+          .from(BUCKET)
+          .createSignedUrl(order.receipt_path, SIGNED_URL_EXPIRY);
+        receiptUrl = signedData?.signedUrl ?? null;
+      }
+
+      return {
+        ...order,
+        items: parseJsonArray(order.items),
+        shipping_address: parseShipping(order.shipping_address),
+        subtotal: toNumber(order.subtotal),
+        shipping_cost: toNumber(order.shipping_cost),
+        tax: toNumber(order.tax),
+        total: toNumber(order.total),
+        receiptUrl,
+      };
     })
   );
 
   return NextResponse.json({ data: ordersWithUrls });
+}
+
+function toNumber(value: unknown) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function parseJsonValue(value: unknown): unknown {
+  if (typeof value !== "string") return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+
+function parseJsonArray(value: unknown) {
+  const parsed = parseJsonValue(value);
+  return Array.isArray(parsed) ? parsed : [];
+}
+
+function parseShipping(value: unknown) {
+  const parsed = parseJsonValue(value);
+  if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+    return parsed;
+  }
+  return { address: "", city: "", state: "", zip: "", country: "" };
 }
 
 export async function PATCH(req: NextRequest) {

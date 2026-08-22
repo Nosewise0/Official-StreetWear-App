@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import { ADMIN_EMAILS } from "../lib/admin";
 import {
   LayoutDashboard,
   Package,
@@ -14,8 +15,6 @@ import {
   ShieldAlert,
   ShoppingBag,
 } from "lucide-react";
-
-const ADMIN_EMAILS = ["admin1@gmail.com", "nonsaker021@gmail.com", "bilat2@gmail.com"];
 
 const navItems = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
